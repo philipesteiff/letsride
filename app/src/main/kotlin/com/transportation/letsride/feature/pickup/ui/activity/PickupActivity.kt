@@ -5,6 +5,7 @@ import com.transportation.letsride.R
 import com.transportation.letsride.common.extensions.appComponent
 import com.transportation.letsride.common.ui.activity.BaseActivity
 import com.transportation.letsride.common.ui.fragment.MapFragment
+import com.transportation.letsride.feature.categories.ui.fragment.CategoriesFragment
 import com.transportation.letsride.feature.pickup.PickupContract
 import com.transportation.letsride.feature.pickup.di.DaggerPickupComponent
 import com.transportation.letsride.feature.pickup.di.PickupComponent
@@ -31,5 +32,8 @@ class PickupActivity : BaseActivity(), PickupContract.View {
     MapFragment
         .newInstance()
         .mapReady
+
+    CategoriesFragment
+        .newInstance()
   }
 }

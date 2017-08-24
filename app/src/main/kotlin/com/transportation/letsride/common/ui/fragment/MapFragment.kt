@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.squareup.leakcanary.RefWatcher
+import com.transportation.letsride.App
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
@@ -39,6 +41,12 @@ class MapFragment : SupportMapFragment() {
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    val refWatcher: RefWatcher = App.getRefWatcher(activity.application)
+    refWatcher.watch(this)
   }
 
 
