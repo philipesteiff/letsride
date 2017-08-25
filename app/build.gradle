@@ -16,10 +16,10 @@ android {
   }
   buildTypes {
     debug {
-      buildConfigField "String", "API_HOST", "\"https://test.cabify.com\""
+      buildConfigField "String", "API_HOST", "\"https://test.cabify.com/api/\""
     }
     release {
-      buildConfigField "String", "API_HOST", "\"https://test.cabify.com\"" // production host
+      buildConfigField "String", "API_HOST", "\"https://test.cabify.com/api/\"" // production host
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }

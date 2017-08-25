@@ -10,6 +10,7 @@ import com.transportation.letsride.common.di.module.ParsersModule
 import com.transportation.letsride.common.di.module.RepositoryModule
 import com.transportation.letsride.data.repository.Repository
 import dagger.Component
+import java.util.Locale
 import javax.inject.Singleton
 
 @Singleton
