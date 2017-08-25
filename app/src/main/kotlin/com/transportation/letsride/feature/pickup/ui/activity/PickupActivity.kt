@@ -3,9 +3,10 @@ package com.transportation.letsride.feature.pickup.ui.activity
 import android.os.Bundle
 import com.transportation.letsride.R
 import com.transportation.letsride.common.extensions.appComponent
+import com.transportation.letsride.common.extensions.attachFragment
+import com.transportation.letsride.common.extensions.commitTransactions
 import com.transportation.letsride.common.ui.activity.BaseActivity
 import com.transportation.letsride.common.ui.fragment.MapFragment
-import com.transportation.letsride.feature.categories.ui.fragment.CategoriesFragment
 import com.transportation.letsride.feature.pickup.PickupContract
 import com.transportation.letsride.feature.pickup.di.DaggerPickupComponent
 import com.transportation.letsride.feature.pickup.di.PickupComponent
@@ -29,11 +30,14 @@ class PickupActivity : BaseActivity(), PickupContract.View {
     setContentView(R.layout.activity_pickup)
     component.inject(this)
 
-    MapFragment
-        .newInstance()
-        .mapReady
+    attachMap()
+  }
 
-    CategoriesFragment
-        .newInstance()
+  private fun attachMap() {
+    val mapFragment = MapFragment.newInstance()
+    supportFragmentManager.commitTransactions {
+      it.attachFragment(mapFragment, R.id.pickupMapContainer, MapFragment.TAG)
+    }
+
   }
 }
