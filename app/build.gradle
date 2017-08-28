@@ -17,6 +17,7 @@ android {
   buildTypes {
     debug {
       buildConfigField "String", "API_HOST", "\"https://test.cabify.com/api/\""
+      buildConfigField "String", "API_GOOGLE_MAPS", "\"https://maps.googleapis.com/\""
     }
     release {
       buildConfigField "String", "API_HOST", "\"https://test.cabify.com/api/\"" // production host
@@ -32,7 +33,7 @@ android {
 }
 
 kapt {
-  generateStubs = true
+  correctErrorTypes = true
 }
 
 dependencies {
@@ -40,16 +41,18 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$versions.kotlin"
   implementation "com.android.support.constraint:constraint-layout:$versions.constraint_layout"
   implementation "com.google.dagger:dagger:$versions.dagger"
-  implementation 'com.google.android.gms:play-services-maps:11.2.0'
-  implementation 'com.android.support:appcompat-v7:26.0.1'
+  implementation "com.google.dagger:dagger-android-support:$versions.dagger"
+  kapt "com.google.dagger:dagger-android-processor:$versions.dagger"
   kapt "com.google.dagger:dagger-compiler:$versions.dagger"
+  implementation "com.google.android.gms:play-services-maps:$versions.google_play_services"
+  implementation "com.google.android.gms:play-services-location:$versions.google_play_services"
   implementation "io.reactivex.rxjava2:rxjava:$versions.rx_java"
   implementation "io.reactivex.rxjava2:rxandroid:$versions.rx_android"
+  implementation "com.jakewharton.rxbinding2:rxbinding:$versions.rx_binding"
   implementation "com.android.support:design:$versions.support_libraries"
   implementation "com.android.support:appcompat-v7:$versions.support_libraries"
   implementation "com.android.support:cardview-v7:$versions.support_libraries"
   implementation "com.android.support:support-annotations:$versions.support_libraries"
-  implementation "com.google.android.gms:play-services-maps:$versions.google_play_services"
   implementation "com.andkulikov:transitionseverywhere:$versions.transition_everywhere"
   debugImplementation "com.squareup.leakcanary:leakcanary-android:$versions.leak_canary"
   releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leak_canary"

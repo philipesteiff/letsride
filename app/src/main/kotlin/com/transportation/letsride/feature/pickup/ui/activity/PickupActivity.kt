@@ -1,75 +1,82 @@
 package com.transportation.letsride.feature.pickup.ui.activity
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import com.transportation.letsride.R
-import com.transportation.letsride.common.extensions.appComponent
+import com.transportation.letsride.common.di.FragmentInjector
 import com.transportation.letsride.common.extensions.attachFragment
-import com.transportation.letsride.common.extensions.commitTransactions
+import com.transportation.letsride.common.extensions.commitNowTransactions
+import com.transportation.letsride.common.extensions.findFragment
 import com.transportation.letsride.common.ui.activity.BaseActivity
-import com.transportation.letsride.common.ui.fragment.MapFragment
-import com.transportation.letsride.data.model.JourneyEstimate
-import com.transportation.letsride.data.model.Stop
-import com.transportation.letsride.data.repository.Repository
+import com.transportation.letsride.feature.map.fragment.CustomMapFragment
 import com.transportation.letsride.feature.pickup.PickupContract
-import com.transportation.letsride.feature.pickup.di.DaggerPickupComponent
-import com.transportation.letsride.feature.pickup.di.PickupComponent
-import com.transportation.letsride.feature.pickup.di.PickupModule
+import com.transportation.letsride.feature.route.fragment.RouteFragment
+import dagger.android.DispatchingAndroidInjector
+import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.Disposables
+import kotlinx.android.synthetic.main.activity_pickup.*
+import timber.log.Timber
 import javax.inject.Inject
 
-class PickupActivity : BaseActivity(), PickupContract.View {
-
-  val component: PickupComponent by lazy {
-    DaggerPickupComponent.builder()
-        .applicationComponent(application.appComponent())
-        .pickupModule(PickupModule(this))
-        .build()
-  }
+class PickupActivity : BaseActivity(), PickupContract.View, FragmentInjector {
 
   @Inject
-  lateinit var categoryRepository: Repository.Category
+  override lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
 
-  @Inject
-  lateinit var presenter: PickupContract.Presenter
+  private var subscription: Disposable = Disposables.empty()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_pickup)
-    component.inject(this)
 
-    attachMap()
-
-    doRequest()
-  }
-
-  private fun doRequest() {
-    JourneyEstimate(
-        stops = listOf(
-            Stop(
-                location = listOf(40.416947, -3.705717),
-                name = "Puerta del sol",
-                address = "Plaza de la Puerta del Sol",
-                number = "s/n",
-                city = "Madrid",
-                country = "Spain",
-                instr = "Hello, world!"
-            ),
-            Stop(
-                location = listOf(40.416947, -3.705717),
-                name = "Puerta del sol",
-                address = "Plaza de la Puerta del Sol",
-                number = "s/n",
-                city = "Madrid",
-                country = "Spain",
-                instr = "Hello, world!"
-            )
-        )
-    ).let { categoryRepository.estimates(it) }
-  }
-
-  private fun attachMap() {
-    val mapFragment = MapFragment.newInstance()
-    supportFragmentManager.commitTransactions {
-      it.attachFragment(mapFragment, R.id.pickupMapContainer, MapFragment.TAG)
+    val mapFragment = CustomMapFragment.newInstance()
+    val routeFragment = RouteFragment.newInstance()
+    supportFragmentManager.commitNowTransactions {
+      it.attachFragment(mapFragment, pickupMapContainer.id, CustomMapFragment.TAG)
+      it.attachFragment(routeFragment, pickupRouteContainer.id, RouteFragment.TAG)
     }
+
+    findFragment<CustomMapFragment>(CustomMapFragment.TAG)?.let {
+      subscribeMapEvents(it)
+    }
+
   }
+
+  private fun subscribeMapEvents(customMapFragment: CustomMapFragment) {
+    subscription = customMapFragment.mapReady.subscribe(
+        { Timber.d("Foi: $it") }
+    )
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    subscription.dispose()
+  }
+
+
+//  private fun doRequest() {
+//    JourneyEstimate(
+//        stops = listOf(
+//            Stop(
+//                location = listOf(40.416947, -3.705717),
+//                name = "Puerta del sol",
+//                address = "Plaza de la Puerta del Sol",
+//                number = "s/n",
+//                city = "Madrid",
+//                country = "Spain",
+//                instr = "Hello, world!"
+//            ),
+//            Stop(
+//                location = listOf(40.416947, -3.705717),
+//                name = "Puerta del sol",
+//                address = "Plaza de la Puerta del Sol",
+//                number = "s/n",
+//                city = "Madrid",
+//                country = "Spain",
+//                instr = "Hello, world!"
+//            )
+//        )
+//    ).let { categoryRepository.estimates(it) }
+//  }
+
 }

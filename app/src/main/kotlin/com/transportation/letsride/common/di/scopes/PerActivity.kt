@@ -1,4 +1,4 @@
-package com.afrodite.common.di
+package com.transportation.letsride.common.di.scopes
 
 import javax.inject.Scope
 

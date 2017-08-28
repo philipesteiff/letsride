@@ -6,11 +6,12 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 
-fun FragmentActivity.findFragment(tag: String): Fragment? {
-  return supportFragmentManager.findFragmentByTag(tag)
+@Suppress("UNCHECKED_CAST")
+fun <F : Fragment> FragmentActivity.findFragment(tag: String): F? {
+  return supportFragmentManager.findFragmentByTag(tag) as F?
 }
 
-fun FragmentManager.commitTransactions(func: FragmentManager.(FragmentTransaction) -> Unit) {
+fun FragmentManager.commitNowTransactions(func: FragmentManager.(FragmentTransaction) -> Unit) {
   beginTransaction().apply { func(this) }.commitNow()
 }
 

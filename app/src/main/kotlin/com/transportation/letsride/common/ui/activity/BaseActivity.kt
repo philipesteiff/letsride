@@ -5,14 +5,20 @@ import android.annotation.TargetApi
 import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.transportation.letsride.BuildConfig
+import com.transportation.letsride.common.di.FragmentInjector
+import dagger.android.AndroidInjection
+import dagger.android.DispatchingAndroidInjector
+import javax.inject.Inject
 
 @SuppressLint("Registered")
-open class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     enableStrictMode()
+    AndroidInjection.inject(this)
     super.onCreate(savedInstanceState)
     window.setBackgroundDrawable(null)
   }

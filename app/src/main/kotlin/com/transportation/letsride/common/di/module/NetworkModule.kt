@@ -75,8 +75,15 @@ open class NetworkModule {
 
   @Provides
   @Singleton
-  fun provideLegacyApiBuilder(httpClient: OkHttpClient, gson: Gson): Retrofit {
+  fun provideApiBuilder(httpClient: OkHttpClient, gson: Gson): Retrofit {
     return buildRetrofit(BuildConfig.API_HOST, httpClient, gson)
+  }
+
+  @Provides
+  @Singleton
+  @Named("MapsGoogleApi")
+  fun provideGoogleMapsApiBuilder(httpClient: OkHttpClient, gson: Gson): Retrofit {
+    return buildRetrofit(BuildConfig.API_GOOGLE_MAPS, httpClient, gson)
   }
 
   @VisibleForTesting

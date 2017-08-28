@@ -1,25 +1,38 @@
 package com.transportation.letsride.common.di.module
 
-import android.app.Application
 import android.content.Context
+import android.os.Build
+import com.transportation.letsride.App
+import com.transportation.letsride.data.executor.ApplicationSchedulers
+import com.transportation.letsride.data.executor.SchedulerProvider
 import dagger.Module
 import dagger.Provides
-import java.util.Locale
+import java.util.*
 import javax.inject.Singleton
 
 @Module
-class AndroidModule(
-    private val application: Application
-) {
+class AndroidModule {
 
   @Provides
   @Singleton
-  fun provideApplicationContext(): Context = application
+  fun providesContext(application: App): Context = application
 
   @Provides
   @Singleton
   fun providesDefaultLocale(context: Context): Locale {
-    return context.resources.configuration.locale
+    return context.run {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        resources.configuration.locales[0]
+      } else {
+        resources.configuration.locale
+      }
+    }
+  }
+
+  @Provides
+  @Singleton
+  fun providesSchedulers(): SchedulerProvider {
+    return ApplicationSchedulers()
   }
 
 }

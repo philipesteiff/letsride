@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="AddressView">
+    <attr name="addressType" format="enum">
+      <enum name="Pickup" value="0"/>
+      <enum name="Destination" value="1"/>
+    </attr>
+    <attr name="addressHint" format="string"/>
+  </declare-styleable>
+</resources>

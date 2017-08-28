@@ -1,37 +1,18 @@
 package com.transportation.letsride.common.di.component
 
-import android.content.Context
 import com.transportation.letsride.App
-import com.transportation.letsride.common.di.module.AndroidModule
-import com.transportation.letsride.common.di.module.ApiModule
-import com.transportation.letsride.common.di.module.LoggerModule
-import com.transportation.letsride.common.di.module.NetworkModule
-import com.transportation.letsride.common.di.module.ParsersModule
-import com.transportation.letsride.common.di.module.RepositoryModule
-import com.transportation.letsride.data.repository.Repository
+import com.transportation.letsride.common.di.module.AppModule
 import dagger.Component
-import java.util.Locale
+import dagger.android.AndroidInjector
 import javax.inject.Singleton
 
 @Singleton
 @Component(
-    modules = arrayOf(
-        AndroidModule::class,
-        LoggerModule::class,
-        RepositoryModule::class,
-        NetworkModule::class,
-        ApiModule::class,
-        ParsersModule::class
-    )
+    modules = arrayOf(AppModule::class)
 )
-interface ApplicationComponent {
+interface ApplicationComponent : AndroidInjector<App> {
 
-  fun inject(app: App)
+  @Component.Builder
+  abstract class Builder : AndroidInjector.Builder<App>()
 
-  // Android
-  fun context(): Context
-
-  //region Repositories
-  fun categoryRepository(): Repository.Category
-  //endregion
 }

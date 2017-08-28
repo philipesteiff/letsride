@@ -1,4 +1,4 @@
-package com.transportation.letsride.common.ui.fragment
+package com.transportation.letsride.feature.map.fragment
 
 import android.os.Bundle
 import android.view.View
@@ -6,41 +6,24 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.squareup.leakcanary.RefWatcher
 import com.transportation.letsride.App
+import com.transportation.letsride.common.util.Signal
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
-class MapFragment : SupportMapFragment() {
+interface MapListener {
+  fun onMapReady(): Observable<Signal>
+}
 
-  companion object {
-    val TAG: String = MapFragment::class.java.canonicalName
+class CustomMapFragment : SupportMapFragment(), MapListener {
 
-    fun newInstance(): MapFragment {
-      return MapFragment().apply {
-        val extra = Bundle()
-        arguments = extra
-      }
-    }
-  }
-
-  object Subscriptions {
-
-    interface OnDrag {
-      fun bindDragStarted(): Observable<Void>
-      fun bindDragFinished(): Observable<LatLng>
-    }
-
-    interface OnMap {
-      fun bindMapReady(): Observable<Void>
-    }
-  }
-
-  val mapReady = BehaviorSubject.create<Void>()
-  val onDragStarted = PublishSubject.create<Void>()
+  val mapReady = BehaviorSubject.create<Signal>()
+  val onDragStarted = PublishSubject.create<Signal>()
   val onDragFinished = PublishSubject.create<LatLng>()
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    getMapAsync { mapReady.onNext(Signal.INSTANCE) }
   }
 
   override fun onDestroy() {
@@ -49,9 +32,17 @@ class MapFragment : SupportMapFragment() {
     refWatcher.watch(this)
   }
 
+  override fun onMapReady(): Observable<Signal> = mapReady
 
-}
+  companion object {
+    val TAG: String = CustomMapFragment::class.java.canonicalName
 
-class MapFragmentViewModel {
+    fun newInstance(): CustomMapFragment {
+      return CustomMapFragment().apply {
+        val extra = Bundle()
+        arguments = extra
+      }
+    }
+  }
 
 }
