@@ -26,12 +26,6 @@ class CustomMapFragment : SupportMapFragment(), MapListener {
     getMapAsync { mapReady.onNext(Signal.INSTANCE) }
   }
 
-  override fun onDestroy() {
-    super.onDestroy()
-    val refWatcher: RefWatcher = App.getRefWatcher(activity.application)
-    refWatcher.watch(this)
-  }
-
   override fun onMapReady(): Observable<Signal> = mapReady
 
   companion object {

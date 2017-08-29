@@ -6,13 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.transportation.letsride.R
 import com.transportation.letsride.common.ui.fragment.BaseFragment
-import com.transportation.letsride.feature.map.MapControlsContract
-import javax.inject.Inject
 
-class MapControlsFragment : BaseFragment(), MapControlsContract.View {
-
-  @Inject
-  lateinit var presenter: MapControlsContract.Presenter
+class MapControlsFragment : BaseFragment() {
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     return inflater.inflate(R.layout.fragment_map_controls, container, false)
@@ -20,7 +15,7 @@ class MapControlsFragment : BaseFragment(), MapControlsContract.View {
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    presenter.bindView(this)
+//    presenter.bindView(this)
   }
 
 

@@ -2,7 +2,6 @@ package com.transportation.letsride.feature.categories.ui.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import com.transportation.letsride.feature.route.RouteContract
 
 class CategoriesFragment : Fragment() {
 

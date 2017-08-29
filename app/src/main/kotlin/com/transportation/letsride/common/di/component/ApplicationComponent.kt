@@ -1,14 +1,20 @@
 package com.transportation.letsride.common.di.component
 
 import com.transportation.letsride.App
+import com.transportation.letsride.common.di.module.FeatureModule
 import com.transportation.letsride.common.di.module.AppModule
 import dagger.Component
+import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import javax.inject.Singleton
 
 @Singleton
 @Component(
-    modules = arrayOf(AppModule::class)
+    modules = arrayOf(
+        AndroidInjectionModule::class,
+        AppModule::class,
+        FeatureModule::class
+    )
 )
 interface ApplicationComponent : AndroidInjector<App> {
 

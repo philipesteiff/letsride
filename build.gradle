@@ -9,6 +9,7 @@ buildscript {
       // Google
       'constraint_layout'    : '1.1.0-beta1',
       'support_libraries'    : '26.0.1',
+      'arch_components'      : '1.0.0-alpha9',
       'google_play_services' : '11.2.0',
       'dagger'               : '2.11',
       'gson'                 : '2.8.1',

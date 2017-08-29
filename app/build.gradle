@@ -40,6 +40,10 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$versions.kotlin"
   implementation "com.android.support.constraint:constraint-layout:$versions.constraint_layout"
+  implementation "android.arch.lifecycle:runtime:$versions.arch_components"
+  implementation "android.arch.lifecycle:extensions:$versions.arch_components"
+  implementation "android.arch.lifecycle:reactivestreams:$versions.arch_components"
+  kapt "android.arch.lifecycle:compiler:$versions.arch_components"
   compileOnly "com.google.dagger:dagger:$versions.dagger"
   implementation "com.google.dagger:dagger-android:$versions.dagger"
   implementation "com.google.dagger:dagger-android-support:$versions.dagger"
