@@ -1,8 +1,9 @@
-package com.transportation.letsride.feature.pickup
+package com.transportation.letsride.feature.map
 
 import com.transportation.letsride.common.Presentable
 
-object PickupContract {
+
+object MapControlsContract {
 
   interface Presenter : Presentable<View>
 

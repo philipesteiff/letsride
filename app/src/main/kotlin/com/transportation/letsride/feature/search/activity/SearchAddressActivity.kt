@@ -1,11 +1,13 @@
 package com.transportation.letsride.feature.search.activity
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.transportation.letsride.R
 import com.transportation.letsride.common.ui.activity.BaseActivity
+import com.transportation.letsride.data.model.AutocompleteSuggestion
 import com.transportation.letsride.data.model.Prediction
 import com.transportation.letsride.feature.search.SearchAddressContract
 import com.transportation.letsride.feature.search.adapter.SearchAddressAdapter
@@ -16,7 +18,6 @@ import kotlinx.android.synthetic.main.activity_search_address.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-// TODO Memory leak com o presenter! Resolver!
 class SearchAddressActivity : BaseActivity(), SearchAddressContract.View {
 
   @Inject
@@ -27,10 +28,11 @@ class SearchAddressActivity : BaseActivity(), SearchAddressContract.View {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_search_address)
-    presenter.bindView(this)
-    presenter.onViewReady(savedInstanceState, intent.extras)
 
     recyclerSearchAddress.adapter = adapter
+
+    presenter.bindView(this)
+    presenter.onViewReady(savedInstanceState, intent.extras)
   }
 
   override fun onSaveInstanceState(outState: Bundle?) {
@@ -55,6 +57,14 @@ class SearchAddressActivity : BaseActivity(), SearchAddressContract.View {
   override fun showPredictions(predictions: List<Prediction>) {
     adapter.clear()
     adapter.addAll(predictions)
+  }
+
+  override fun finishViewWith(suggestion: AutocompleteSuggestion) {
+//    val data = Intent()
+//    data.putExtra(EXTRA_ADDRESS, suggestion)
+//
+//    setResult(Activity.RESULT_OK, data)
+//    finish()
   }
 
   companion object {

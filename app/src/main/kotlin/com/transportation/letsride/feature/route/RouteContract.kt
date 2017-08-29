@@ -4,7 +4,7 @@ import com.transportation.letsride.common.Presentable
 
 object RouteContract {
 
-  interface Presenter: Presentable<RouteContract.View> {
+  interface Presenter: Presentable<View> {
     fun pickupAddressClick()
     fun dropoffAddressClick()
   }

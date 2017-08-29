@@ -9,6 +9,7 @@ import com.transportation.letsride.common.extensions.commitNowTransactions
 import com.transportation.letsride.common.extensions.findFragment
 import com.transportation.letsride.common.ui.activity.BaseActivity
 import com.transportation.letsride.feature.map.fragment.CustomMapFragment
+import com.transportation.letsride.feature.map.fragment.MapControlsFragment
 import com.transportation.letsride.feature.pickup.PickupContract
 import com.transportation.letsride.feature.route.fragment.RouteFragment
 import dagger.android.DispatchingAndroidInjector
@@ -31,13 +32,15 @@ class PickupActivity : BaseActivity(), PickupContract.View, FragmentInjector {
 
     val mapFragment = CustomMapFragment.newInstance()
     val routeFragment = RouteFragment.newInstance()
+    val mapControlsFragment = MapControlsFragment.newInstance()
     supportFragmentManager.commitNowTransactions {
       it.attachFragment(mapFragment, pickupMapContainer.id, CustomMapFragment.TAG)
+      it.attachFragment(mapControlsFragment, pickupMapControlsContainer.id, MapControlsFragment.TAG)
       it.attachFragment(routeFragment, pickupRouteContainer.id, RouteFragment.TAG)
     }
 
     findFragment<CustomMapFragment>(CustomMapFragment.TAG)?.let {
-      subscribeMapEvents(it)
+      //      subscribeMapEvents(it)
     }
 
   }

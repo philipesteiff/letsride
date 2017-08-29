@@ -37,10 +37,7 @@ class RouteFragment : BaseFragment(), RouteContract.View {
     val TAG: String = RouteFragment::class.java.canonicalName
 
     fun newInstance(): RouteFragment {
-      return RouteFragment().apply {
-        val extra = Bundle()
-        arguments = extra
-      }
+      return RouteFragment()
     }
   }
 

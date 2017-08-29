@@ -8,7 +8,12 @@ import io.reactivex.Observable
 
 object SearchAddressContract {
 
-  interface Presenter : Presentable<SearchAddressContract.View> {
+  interface Presenter : Presentable<View> {
+
+    companion object {
+      const val STATE_PREDICTIONS = "state_predictions"
+    }
+
     fun onViewDestroy()
     fun onClickSuggestion(suggestion: AutocompleteSuggestion)
   }
@@ -16,6 +21,7 @@ object SearchAddressContract {
   interface View {
     fun addressChanges(): Observable<String>
     fun showPredictions(predictions: List<Prediction>)
+    fun finishViewWith(suggestion: AutocompleteSuggestion)
   }
 
 }
