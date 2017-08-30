@@ -1,4 +1,4 @@
-package com.transportation.letsride.feature.route.widget
+package com.transportation.letsride.feature.pickupdropoff.widget
 
 import android.content.Context
 import android.util.AttributeSet

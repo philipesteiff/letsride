@@ -2,6 +2,7 @@ package com.transportation.letsride.feature.pickup.ui.activity
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -13,20 +14,12 @@ import com.transportation.letsride.common.extensions.commitNowTransactions
 import com.transportation.letsride.common.extensions.findFragment
 import com.transportation.letsride.common.ui.activity.BaseActivity
 import com.transportation.letsride.feature.map.fragment.CustomMapFragment
-import com.transportation.letsride.feature.map.fragment.MapControlsFragment
-import com.transportation.letsride.feature.route.fragment.RouteFragment
+import com.transportation.letsride.feature.map.viewmodel.CustomMapViewModel
+import com.transportation.letsride.feature.pickupdropoff.fragment.PickupDropoffFragment
 import dagger.android.DispatchingAndroidInjector
-import kotlinx.android.synthetic.main.activity_pickup.pickupMapContainer
-import kotlinx.android.synthetic.main.activity_pickup.pickupMapControlsContainer
-import kotlinx.android.synthetic.main.activity_pickup.pickupRouteContainer
-import permissions.dispatcher.NeedsPermission
-import permissions.dispatcher.OnNeverAskAgain
-import permissions.dispatcher.OnPermissionDenied
-import permissions.dispatcher.OnShowRationale
-import permissions.dispatcher.PermissionRequest
-import permissions.dispatcher.RuntimePermissions
+import kotlinx.android.synthetic.main.activity_pickup.*
+import permissions.dispatcher.*
 import javax.inject.Inject
-
 
 @RuntimePermissions
 class PickupActivity : BaseActivity(), FragmentInjector {
@@ -42,6 +35,11 @@ class PickupActivity : BaseActivity(), FragmentInjector {
       attachViews()
 
     PickupActivityPermissionsDispatcher.onLocationPermissionGrantedWithCheck(this)
+    findFragment<CustomMapFragment>(CustomMapFragment.TAG)?.let {
+      val mapDragger = ViewModelProviders.of(it, viewModelFactory)
+          .get(CustomMapViewModel::class.java).mapDragged
+      // Pegaria
+    }
   }
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -52,8 +50,7 @@ class PickupActivity : BaseActivity(), FragmentInjector {
   private fun attachViews() {
     supportFragmentManager.commitNowTransactions {
       it.attachFragment(CustomMapFragment.newInstance(), pickupMapContainer.id, CustomMapFragment.TAG)
-      it.attachFragment(MapControlsFragment.newInstance(), pickupMapControlsContainer.id, MapControlsFragment.TAG)
-      it.attachFragment(RouteFragment.newInstance(), pickupRouteContainer.id, RouteFragment.TAG)
+      it.attachFragment(PickupDropoffFragment.newInstance(), pickupRouteContainer.id, PickupDropoffFragment.TAG)
     }
   }
 
@@ -61,7 +58,6 @@ class PickupActivity : BaseActivity(), FragmentInjector {
   fun onLocationPermissionGranted() {
     findFragment<CustomMapFragment>(CustomMapFragment.TAG)
         ?.locationPermissionGranted()
-
   }
 
   @OnShowRationale(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)

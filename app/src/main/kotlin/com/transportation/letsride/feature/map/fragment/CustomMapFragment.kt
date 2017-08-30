@@ -1,5 +1,6 @@
 package com.transportation.letsride.feature.map.fragment
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.ViewModelProvider
@@ -8,49 +9,53 @@ import android.os.Bundle
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.transportation.letsride.common.di.Injectable
 import com.transportation.letsride.common.util.plusAssign
 import com.transportation.letsride.common.util.unsafeLazy
-import com.transportation.letsride.feature.location.PickupViewModel
+import com.transportation.letsride.feature.map.viewmodel.CustomMapViewModel
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import javax.inject.Inject
 
-class CustomMapFragment : SupportMapFragment(), LifecycleOwner {
+class CustomMapFragment : SupportMapFragment(), LifecycleOwner, Injectable {
 
   @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
   private val disposables = CompositeDisposable()
 
-  val viewModel: PickupViewModel by unsafeLazy {
-    ViewModelProviders.of(this, viewModelFactory)
-        .get(PickupViewModel::class.java)
+  val viewModel: CustomMapViewModel by unsafeLazy {
+    ViewModelProviders.of(activity, viewModelFactory)
+        .get(CustomMapViewModel::class.java)
   }
 
-  private var mLifecycleRegistry = LifecycleRegistry(this)
-
-  override fun getLifecycle(): LifecycleRegistry {
-    return mLifecycleRegistry
-  }
+  private var lifecycleRegistry = LifecycleRegistry(this)
 
   override fun onDestroy() {
     super.onDestroy()
     disposables.clear()
   }
 
+  override fun getLifecycle() = lifecycleRegistry
+
+  @SuppressLint("MissingPermission")
   fun locationPermissionGranted() {
-    getMapAsync { googleMap -> listenMapEvents(googleMap) }
+    getMapAsync { googleMap ->
+      googleMap.isMyLocationEnabled = true
+      listenMapEvents(googleMap)
+    }
   }
 
   private fun listenMapEvents(googleMap: GoogleMap) {
+    viewModel.mapReady()
 
-    viewModel.onMapReady()
-
-    disposables += googleMap.onMapDragged().subscribe(
-        { latLng -> viewModel.onMapDragged(latLng) },
-        { Timber.e(it) }
-    )
+    disposables += googleMap.onMapDragged()
+        .doOnNext { Timber.d("MapDragged: $it") }
+        .subscribe(
+            { latLng -> viewModel.mapDragged(latLng) },
+            { Timber.e(it) }
+        )
   }
 
   private fun GoogleMap.onMapDragged(): Flowable<LatLng> {

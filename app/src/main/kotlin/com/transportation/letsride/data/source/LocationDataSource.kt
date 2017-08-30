@@ -31,7 +31,7 @@ class LocationDataSource @Inject constructor(
         .setInterval(INTERVAL_UPDATES)
   }
 
-  var locations = PublishSubject.create<LocationSourceResponse>().apply {
+  var locations: PublishSubject<LocationSourceResponse> = PublishSubject.create<LocationSourceResponse>().apply {
     doOnSubscribe { connect() }
     doOnDispose { if (!hasObservers()) disconnect() }
   }
