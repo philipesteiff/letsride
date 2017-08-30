@@ -59,6 +59,10 @@ dependencies {
   implementation "com.android.support:cardview-v7:$versions.support_libraries"
   implementation "com.android.support:support-annotations:$versions.support_libraries"
   implementation "com.andkulikov:transitionseverywhere:$versions.transition_everywhere"
+  implementation ("com.github.hotchemi:permissionsdispatcher:$versions.permissions_dispatcher_version") {
+    exclude module: "support-v13"
+  }
+  kapt "com.github.hotchemi:permissionsdispatcher-processor:$versions.permissions_dispatcher_version"
   debugImplementation "com.squareup.leakcanary:leakcanary-android:$versions.leak_canary"
   releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leak_canary"
   implementation "com.jakewharton.timber:timber:$versions.timber"

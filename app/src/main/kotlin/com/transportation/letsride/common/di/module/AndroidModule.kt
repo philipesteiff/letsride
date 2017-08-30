@@ -1,5 +1,6 @@
 package com.transportation.letsride.common.di.module
 
+import android.app.Application
 import android.content.Context
 import android.os.Build
 import com.transportation.letsride.App
@@ -16,6 +17,10 @@ class AndroidModule {
   @Provides
   @Singleton
   fun providesContext(application: App): Context = application
+
+  @Provides
+  @Singleton
+  fun providesApplication(application: App): Application = application
 
   @Provides
   @Singleton

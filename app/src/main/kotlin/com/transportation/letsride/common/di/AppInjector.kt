@@ -34,7 +34,7 @@ interface AppInjector {
     })
   }
 
-  fun handleActivity(activity: Activity) {
+  private fun handleActivity(activity: Activity) {
     if (activity is HasSupportFragmentInjector) {
       AndroidInjection.inject(activity)
     }

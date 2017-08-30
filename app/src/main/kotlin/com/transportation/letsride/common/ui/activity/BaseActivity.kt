@@ -3,13 +3,17 @@ package com.transportation.letsride.common.ui.activity
 import android.annotation.TargetApi
 import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.LifecycleRegistryOwner
+import android.arch.lifecycle.ViewModelProvider
 import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.support.v7.app.AppCompatActivity
 import com.transportation.letsride.BuildConfig
+import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity(), LifecycleRegistryOwner {
+
+  @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
   private val lifecycleRegistry = LifecycleRegistry(this)
 
