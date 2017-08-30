@@ -12,10 +12,11 @@ import com.google.android.gms.location.LocationServices
 import com.transportation.letsride.common.extensions.isDifferent
 import com.transportation.letsride.common.util.unsafeLazy
 import io.reactivex.subjects.PublishSubject
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LocationDataSource(
+class LocationDataSource @Inject constructor(
     private val googleApiClient: GoogleApiClient
 ) : LocationListener,
     GoogleApiClient.OnConnectionFailedListener,

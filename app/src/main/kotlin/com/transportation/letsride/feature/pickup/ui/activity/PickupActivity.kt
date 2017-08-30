@@ -2,7 +2,6 @@ package com.transportation.letsride.feature.pickup.ui.activity
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -11,15 +10,21 @@ import com.transportation.letsride.R
 import com.transportation.letsride.common.di.FragmentInjector
 import com.transportation.letsride.common.extensions.attachFragment
 import com.transportation.letsride.common.extensions.commitNowTransactions
+import com.transportation.letsride.common.extensions.findFragment
 import com.transportation.letsride.common.ui.activity.BaseActivity
-import com.transportation.letsride.common.util.unsafeLazy
-import com.transportation.letsride.feature.location.LocationViewModel
 import com.transportation.letsride.feature.map.fragment.CustomMapFragment
 import com.transportation.letsride.feature.map.fragment.MapControlsFragment
 import com.transportation.letsride.feature.route.fragment.RouteFragment
 import dagger.android.DispatchingAndroidInjector
-import kotlinx.android.synthetic.main.activity_pickup.*
-import permissions.dispatcher.*
+import kotlinx.android.synthetic.main.activity_pickup.pickupMapContainer
+import kotlinx.android.synthetic.main.activity_pickup.pickupMapControlsContainer
+import kotlinx.android.synthetic.main.activity_pickup.pickupRouteContainer
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.OnNeverAskAgain
+import permissions.dispatcher.OnPermissionDenied
+import permissions.dispatcher.OnShowRationale
+import permissions.dispatcher.PermissionRequest
+import permissions.dispatcher.RuntimePermissions
 import javax.inject.Inject
 
 
@@ -29,20 +34,14 @@ class PickupActivity : BaseActivity(), FragmentInjector {
   @Inject
   override lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
 
-  val viewModel: LocationViewModel by unsafeLazy {
-    ViewModelProviders.of(this, viewModelFactory)
-        .get(LocationViewModel::class.java)
-  }
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_pickup)
 
-    if (savedInstanceState == null) {
+    if (savedInstanceState == null)
       attachViews()
-    }
 
-    PickupActivityPermissionsDispatcher.listenLocationsWithCheck(this)
+    PickupActivityPermissionsDispatcher.onLocationPermissionGrantedWithCheck(this)
   }
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -59,7 +58,9 @@ class PickupActivity : BaseActivity(), FragmentInjector {
   }
 
   @NeedsPermission(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
-  fun listenLocations() {
+  fun onLocationPermissionGranted() {
+    findFragment<CustomMapFragment>(CustomMapFragment.TAG)
+        ?.locationPermissionGranted()
 
   }
 
