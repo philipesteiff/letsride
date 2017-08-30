@@ -1,7 +1,6 @@
-package com.transportation.letsride.feature.location
+package com.transportation.letsride.data.source
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.LiveData
 import android.location.Location
 import android.os.Bundle
 import com.google.android.gms.common.ConnectionResult
@@ -12,13 +11,17 @@ import com.google.android.gms.location.LocationRequest.*
 import com.google.android.gms.location.LocationServices
 import com.transportation.letsride.common.extensions.isDifferent
 import com.transportation.letsride.common.util.unsafeLazy
+import io.reactivex.subjects.PublishSubject
+import javax.inject.Singleton
 
-class LocationLiveData(
+@Singleton
+class LocationDataSource(
     private val googleApiClient: GoogleApiClient
-) : LiveData<LocationData>(),
-    LocationListener,
+) : LocationListener,
     GoogleApiClient.OnConnectionFailedListener,
     GoogleApiClient.ConnectionCallbacks {
+
+  private val currentLocationData = LocationSourceResponse.NewLocation(Location("empty"))
 
   private val locationRequest: LocationRequest by unsafeLazy {
     LocationRequest()
@@ -27,31 +30,27 @@ class LocationLiveData(
         .setInterval(INTERVAL_UPDATES)
   }
 
-  private val currentLocationData = LocationData.NewLocation(Location("empty"))
-
-  init {
-    googleApiClient.registerConnectionCallbacks(this)
-  }
-
-  override fun onActive() {
-    super.onActive()
-    connect()
-  }
-
-  override fun onInactive() {
-    super.onInactive()
-    disconnect()
+  var locations = PublishSubject.create<LocationSourceResponse>().apply {
+    doOnSubscribe { connect() }
+    doOnDispose { if (!hasObservers()) disconnect() }
   }
 
   private fun connect() {
-    googleApiClient.takeUnless { it.isConnected }?.connect()
+    googleApiClient.run {
+      if (!isConnected) {
+        registerConnectionCallbacks(this@LocationDataSource)
+        connect()
+      }
+    }
   }
 
   private fun disconnect() {
-    if (googleApiClient.isConnected)
-      LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
+    googleApiClient.run {
+      if (isConnected)
+        LocationServices.FusedLocationApi.removeLocationUpdates(this, this@LocationDataSource)
 
-    googleApiClient.disconnect()
+      disconnect()
+    }
   }
 
   override fun onConnected(bundle: Bundle?) {
@@ -65,7 +64,7 @@ class LocationLiveData(
   }
 
   override fun onConnectionFailed(connectionResult: ConnectionResult) {
-    value = LocationData.ConnectionFailed()
+    locations.onNext(LocationSourceResponse.ConnectionFailed())
   }
 
   override fun onConnectionSuspended(connectionSuspended: Int) {
@@ -90,7 +89,7 @@ class LocationLiveData(
     newLocation?.let {
       currentLocationData
           .apply { location = it }
-          .run { value = this }
+          .let { locations.onNext(it) }
     }
   }
 
@@ -101,9 +100,9 @@ class LocationLiveData(
 
 }
 
-sealed class LocationData {
-  class NewLocation(var location: Location) : LocationData()
-  class ConnectionFailed : LocationData()
+sealed class LocationSourceResponse {
+  class NewLocation(var location: Location) : LocationSourceResponse()
+  class ConnectionFailed : LocationSourceResponse()
 }
 
 

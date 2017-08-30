@@ -12,9 +12,7 @@ import com.transportation.letsride.common.di.FragmentInjector
 import com.transportation.letsride.common.extensions.attachFragment
 import com.transportation.letsride.common.extensions.commitNowTransactions
 import com.transportation.letsride.common.ui.activity.BaseActivity
-import com.transportation.letsride.common.util.asPublisher
 import com.transportation.letsride.common.util.unsafeLazy
-import com.transportation.letsride.feature.location.LocationData
 import com.transportation.letsride.feature.location.LocationViewModel
 import com.transportation.letsride.feature.map.fragment.CustomMapFragment
 import com.transportation.letsride.feature.map.fragment.MapControlsFragment
@@ -22,7 +20,6 @@ import com.transportation.letsride.feature.route.fragment.RouteFragment
 import dagger.android.DispatchingAndroidInjector
 import kotlinx.android.synthetic.main.activity_pickup.*
 import permissions.dispatcher.*
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -40,7 +37,11 @@ class PickupActivity : BaseActivity(), FragmentInjector {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_pickup)
-    attachViews()
+
+    if (savedInstanceState == null) {
+      attachViews()
+    }
+
     PickupActivityPermissionsDispatcher.listenLocationsWithCheck(this)
   }
 
@@ -59,19 +60,7 @@ class PickupActivity : BaseActivity(), FragmentInjector {
 
   @NeedsPermission(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
   fun listenLocations() {
-    viewModel.locationLiveData
-        .asPublisher(this)
-        .doOnSubscribe { Timber.d("locationLiveData Subscribed") }
-        .subscribe(
-            { locationsData ->
-              when (locationsData) {
-                is LocationData.NewLocation -> Timber.d("locationLiveData ${locationsData.location}")
-                is LocationData.ConnectionFailed -> Timber.d("locationLiveData $locationsData")
-              }
-            },
-            { error -> Timber.e(error) },
-            { Timber.e("locationLiveData Completed") }
-        )
+
   }
 
   @OnShowRationale(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)

@@ -4,6 +4,7 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import com.google.android.gms.common.api.GoogleApiClient
 import com.transportation.letsride.common.util.unsafeLazy
+import com.transportation.letsride.data.source.LocationLiveData
 import javax.inject.Inject
 
 class LocationViewModel @Inject constructor(
@@ -14,3 +15,4 @@ class LocationViewModel @Inject constructor(
   val locationLiveData by unsafeLazy { LocationLiveData(googleApiClient) }
 
 }
+
