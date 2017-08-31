@@ -24,4 +24,15 @@ data class GeocodeResult(
     if (filtered.isEmpty()) return ""
     return filtered.first().longName
   }
+
+  fun toAddress(): Address {
+    return Address(
+        name = "",
+        country = "",
+        city = "",
+        latitude = 2.0,
+        longitude = 2.0
+    )
+  }
+
 }

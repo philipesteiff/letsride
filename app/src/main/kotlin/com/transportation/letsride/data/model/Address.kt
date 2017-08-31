@@ -1,8 +1,13 @@
 package com.transportation.letsride.data.model
 
 data class Address(
-    var title: String = "",
-    var subtitle: String = "",
-    var latitude: Double,
-    var longitude: Double
-)
+    val name: String,
+    val city: String,
+    val country: String,
+    val latitude: Double,
+    val longitude: Double
+) {
+
+  fun isValid() = true
+
+}

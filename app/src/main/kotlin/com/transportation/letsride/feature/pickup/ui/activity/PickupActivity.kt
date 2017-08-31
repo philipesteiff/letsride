@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.widget.Toast
+import com.google.android.gms.maps.model.LatLng
 import com.transportation.letsride.R
 import com.transportation.letsride.common.di.FragmentInjector
 import com.transportation.letsride.common.extensions.attachFragment
@@ -16,13 +17,14 @@ import com.transportation.letsride.common.ui.activity.BaseActivity
 import com.transportation.letsride.feature.map.fragment.CustomMapFragment
 import com.transportation.letsride.feature.map.viewmodel.CustomMapViewModel
 import com.transportation.letsride.feature.pickupdropoff.fragment.PickupDropoffFragment
+import com.transportation.letsride.feature.pickupdropoff.viewmodel.PickupDropoffViewModel
 import dagger.android.DispatchingAndroidInjector
 import kotlinx.android.synthetic.main.activity_pickup.*
 import permissions.dispatcher.*
 import javax.inject.Inject
 
 @RuntimePermissions
-class PickupActivity : BaseActivity(), FragmentInjector {
+class PickupActivity : BaseActivity(), FragmentInjector, CustomMapFragment.OnMapListener {
 
   @Inject
   override lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
@@ -35,11 +37,6 @@ class PickupActivity : BaseActivity(), FragmentInjector {
       attachViews()
 
     PickupActivityPermissionsDispatcher.onLocationPermissionGrantedWithCheck(this)
-    findFragment<CustomMapFragment>(CustomMapFragment.TAG)?.let {
-      val mapDragger = ViewModelProviders.of(it, viewModelFactory)
-          .get(CustomMapViewModel::class.java).mapDragged
-      // Pegaria
-    }
   }
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -51,6 +48,26 @@ class PickupActivity : BaseActivity(), FragmentInjector {
     supportFragmentManager.commitNowTransactions {
       it.attachFragment(CustomMapFragment.newInstance(), pickupMapContainer.id, CustomMapFragment.TAG)
       it.attachFragment(PickupDropoffFragment.newInstance(), pickupRouteContainer.id, PickupDropoffFragment.TAG)
+    }
+  }
+
+  override fun onMapDragged(latLng: LatLng) {
+    pickupDropoffViewModel()?.newCurrentLocation(latLng)
+  }
+
+  private fun customMapViewModel(): CustomMapViewModel? {
+    return findFragment<CustomMapFragment>(CustomMapFragment.TAG)?.let {
+      ViewModelProviders
+          .of(it, viewModelFactory)
+          .get(CustomMapViewModel::class.java)
+    }
+  }
+
+  private fun pickupDropoffViewModel(): PickupDropoffViewModel? {
+    return findFragment<PickupDropoffFragment>(PickupDropoffFragment.TAG)?.let {
+      ViewModelProviders
+          .of(it, viewModelFactory)
+          .get(PickupDropoffViewModel::class.java)
     }
   }
 

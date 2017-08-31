@@ -5,10 +5,13 @@ import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.transportation.letsride.R
 import com.transportation.letsride.common.di.Injectable
 import com.transportation.letsride.common.util.plusAssign
 import com.transportation.letsride.common.util.unsafeLazy
@@ -23,6 +26,8 @@ class CustomMapFragment : SupportMapFragment(), LifecycleOwner, Injectable {
 
   @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
+  private var lifecycleRegistry = LifecycleRegistry(this)
+
   private val disposables = CompositeDisposable()
 
   val viewModel: CustomMapViewModel by unsafeLazy {
@@ -30,7 +35,17 @@ class CustomMapFragment : SupportMapFragment(), LifecycleOwner, Injectable {
         .get(CustomMapViewModel::class.java)
   }
 
-  private var lifecycleRegistry = LifecycleRegistry(this)
+  private var mapCallback: OnMapListener? = null
+
+  override fun onAttach(context: Context?) {
+    super.onAttach(context)
+    try {
+      mapCallback = activity as OnMapListener
+    } catch (e: ClassCastException) {
+      throw ClassCastException(activity.toString() + " must implement OnHeadlineSelectedListener")
+    }
+
+  }
 
   override fun onDestroy() {
     super.onDestroy()
@@ -42,8 +57,11 @@ class CustomMapFragment : SupportMapFragment(), LifecycleOwner, Injectable {
   @SuppressLint("MissingPermission")
   fun locationPermissionGranted() {
     getMapAsync { googleMap ->
-      googleMap.isMyLocationEnabled = true
-      listenMapEvents(googleMap)
+      googleMap.apply {
+        isMyLocationEnabled = true
+        setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.midnight_map_style))
+        listenMapEvents(googleMap)
+      }
     }
   }
 
@@ -52,6 +70,7 @@ class CustomMapFragment : SupportMapFragment(), LifecycleOwner, Injectable {
 
     disposables += googleMap.onMapDragged()
         .doOnNext { Timber.d("MapDragged: $it") }
+        .doOnNext { mapCallback?.onMapDragged(it) }
         .subscribe(
             { latLng -> viewModel.mapDragged(latLng) },
             { Timber.e(it) }
@@ -91,6 +110,10 @@ class CustomMapFragment : SupportMapFragment(), LifecycleOwner, Injectable {
         .filter { it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE }
         .flatMap { onCameraIdle.take(1) }
         .doOnNext { Timber.d("Dragging stop") }
+  }
+
+  interface OnMapListener {
+    fun onMapDragged(latLng: LatLng)
   }
 
   companion object {

@@ -7,10 +7,11 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationListener
 import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationRequest.*
+import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.location.LocationServices
 import com.transportation.letsride.common.extensions.isDifferent
 import com.transportation.letsride.common.util.unsafeLazy
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,10 +32,12 @@ class LocationDataSource @Inject constructor(
         .setInterval(INTERVAL_UPDATES)
   }
 
-  var locations: PublishSubject<LocationSourceResponse> = PublishSubject.create<LocationSourceResponse>().apply {
+  private var locations: PublishSubject<LocationSourceResponse> = PublishSubject.create<LocationSourceResponse>().apply {
     doOnSubscribe { connect() }
     doOnDispose { if (!hasObservers()) disconnect() }
   }
+
+  fun getLocationsStream(): Observable<LocationSourceResponse> = locations
 
   private fun connect() {
     googleApiClient.run {

@@ -9,12 +9,12 @@ import retrofit2.http.Query
 interface GoogleMapsApi {
 
   companion object {
-    const val GOOGLE_MAPS_API_AUTOCOMPLETE_KEY = "AIzaSyAeC4hVs-Jq2eYILUXPvVYSodsBkRxyw_U"
+    const val GOOGLE_MAPS_API_KEY = "AIzaSyAeC4hVs-Jq2eYILUXPvVYSodsBkRxyw_U"
   }
 
   @GET("/maps/api/place/autocomplete/json")
   fun getPlaceAutocomplete(
-      @Query("key") key: String,
+      @Query("key") key: String = GOOGLE_MAPS_API_KEY,
       @Query("input") input: String,
       @Query("offset") offset: Int? = null,
       @Query("location") location: String? = null,
@@ -27,7 +27,9 @@ interface GoogleMapsApi {
 
   @GET("/maps/api/geocode/json")
   fun getReverseGeocode(
-      @Query("key") key: String,
-      @Query("place_id") placeId: String
+      @Query("key") key: String = GOOGLE_MAPS_API_KEY,
+      @Query("latlng") latLng: String? = null,
+      @Query("place_id") placeId: String? = null
   ): Single<GeocodeResponse>
+
 }

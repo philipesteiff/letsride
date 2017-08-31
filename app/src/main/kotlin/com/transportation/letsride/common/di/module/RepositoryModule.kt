@@ -7,6 +7,7 @@ import com.transportation.letsride.data.repository.CategoryRepository
 import com.transportation.letsride.data.repository.LocationRepository
 import com.transportation.letsride.data.repository.Repository
 import com.transportation.letsride.data.repository.RouteRepository
+import com.transportation.letsride.data.source.AddressDataSource
 import com.transportation.letsride.data.source.LocationDataSource
 import dagger.Module
 import dagger.Provides
@@ -18,9 +19,13 @@ class RepositoryModule {
   @Provides
   @Singleton
   fun providesLocationRepository(
-      locationDataSource: LocationDataSource
+      locationDataSource: LocationDataSource,
+      addressDataSource: AddressDataSource
   ): Repository.Location {
-    return LocationRepository(locationDataSource)
+    return LocationRepository(
+        locationDataSource,
+        addressDataSource
+    )
   }
 
   @Provides
