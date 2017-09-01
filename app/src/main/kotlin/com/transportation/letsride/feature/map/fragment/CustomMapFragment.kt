@@ -51,11 +51,11 @@ class CustomMapFragment : SupportMapFragment(), LifecycleOwner, Injectable {
     viewModel.currentMapPosition
         .observe(this, Observer { moveMap(it) })
 
+
     sharedViewModel.addressChange
-        .observe(this, Observer {
+        .observe(activity as LifecycleOwner, Observer {
           viewModel.addressChange(it)
         })
-
 
   }
 
