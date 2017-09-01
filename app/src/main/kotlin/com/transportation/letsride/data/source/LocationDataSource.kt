@@ -12,7 +12,7 @@ import com.google.android.gms.location.LocationServices
 import com.transportation.letsride.common.extensions.isDifferent
 import com.transportation.letsride.common.util.unsafeLazy
 import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,7 +32,7 @@ class LocationDataSource @Inject constructor(
         .setInterval(INTERVAL_UPDATES)
   }
 
-  private var locations: PublishSubject<LocationSourceResponse> = PublishSubject.create<LocationSourceResponse>().apply {
+  private var locations: BehaviorSubject<LocationSourceResponse> = BehaviorSubject.create<LocationSourceResponse>().apply {
     doOnSubscribe { connect() }
     doOnDispose { if (!hasObservers()) disconnect() }
   }

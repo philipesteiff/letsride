@@ -1,12 +1,13 @@
 package com.transportation.letsride.feature.pickupdropoff.viewmodel
 
+import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
+import com.transportation.letsride.common.util.plusAssign
 import com.transportation.letsride.common.viewmodel.BaseViewModel
 import com.transportation.letsride.data.executor.SchedulerProvider
 import com.transportation.letsride.data.model.Address
 import com.transportation.letsride.data.repository.Repository
-import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -15,19 +16,31 @@ class PickupDropoffViewModel @Inject constructor(
     private val schedulers: SchedulerProvider
 ) : BaseViewModel() {
 
-  private val currentLocation: BehaviorSubject<LatLng> = BehaviorSubject.create<LatLng>()
+  val currentLocation = MutableLiveData<LatLng>()
 
-  fun newCurrentLocation(latLng: LatLng) {
-    currentLocation.onNext(latLng)
+  val addressChange = MediatorLiveData<Address?>().apply {
+    addSource(currentLocation) { latLng ->
+      if (latLng != null)
+        findAddress(latLng)
+      else
+        Timber.e("latlng was null")
+    }
   }
 
-  fun getAddressChangeStream(): Observable<Address?> = currentLocation
-      .doOnNext { Timber.d("AeeeHOo 1 / $it")}
-      .flatMapSingle(locationRepository::getAddressFromLocation)
-      .doOnNext { Timber.d("AeeeHOo 2 / $it")}
-      .subscribeOn(schedulers.io())
-      .observeOn(schedulers.ui())
+  private fun findAddress(latLng: LatLng) {
+    disposables += locationRepository
+        .getAddressFromLocation(latLng)
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
+        .subscribe(
+            { address -> addressChange.value = address },
+            { error -> Timber.e(error) }
+        )
+  }
 
+  fun newCurrentLocation(latLng: LatLng) {
+    currentLocation.value = latLng
+  }
 
 
 }

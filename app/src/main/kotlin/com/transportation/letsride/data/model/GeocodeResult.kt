@@ -27,11 +27,11 @@ data class GeocodeResult(
 
   fun toAddress(): Address {
     return Address(
-        name = "",
-        country = "",
-        city = "",
-        latitude = 2.0,
-        longitude = 2.0
+        name = formattedAddress,
+        country = getCountry(),
+        city = getCity(),
+        latitude = geometry.location.latitude,
+        longitude = geometry.location.longitude
     )
   }
 

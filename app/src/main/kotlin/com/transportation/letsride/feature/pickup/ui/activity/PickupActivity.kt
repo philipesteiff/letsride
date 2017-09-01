@@ -14,8 +14,10 @@ import com.transportation.letsride.common.extensions.attachFragment
 import com.transportation.letsride.common.extensions.commitNowTransactions
 import com.transportation.letsride.common.extensions.findFragment
 import com.transportation.letsride.common.ui.activity.BaseActivity
+import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.feature.map.fragment.CustomMapFragment
 import com.transportation.letsride.feature.map.viewmodel.CustomMapViewModel
+import com.transportation.letsride.feature.pickup.viewmodel.PickupViewModel
 import com.transportation.letsride.feature.pickupdropoff.fragment.PickupDropoffFragment
 import com.transportation.letsride.feature.pickupdropoff.viewmodel.PickupDropoffViewModel
 import dagger.android.DispatchingAndroidInjector
@@ -24,7 +26,7 @@ import permissions.dispatcher.*
 import javax.inject.Inject
 
 @RuntimePermissions
-class PickupActivity : BaseActivity(), FragmentInjector, CustomMapFragment.OnMapListener {
+class PickupActivity : BaseActivity(), FragmentInjector {
 
   @Inject
   override lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
@@ -48,26 +50,6 @@ class PickupActivity : BaseActivity(), FragmentInjector, CustomMapFragment.OnMap
     supportFragmentManager.commitNowTransactions {
       it.attachFragment(CustomMapFragment.newInstance(), pickupMapContainer.id, CustomMapFragment.TAG)
       it.attachFragment(PickupDropoffFragment.newInstance(), pickupRouteContainer.id, PickupDropoffFragment.TAG)
-    }
-  }
-
-  override fun onMapDragged(latLng: LatLng) {
-    pickupDropoffViewModel()?.newCurrentLocation(latLng)
-  }
-
-  private fun customMapViewModel(): CustomMapViewModel? {
-    return findFragment<CustomMapFragment>(CustomMapFragment.TAG)?.let {
-      ViewModelProviders
-          .of(it, viewModelFactory)
-          .get(CustomMapViewModel::class.java)
-    }
-  }
-
-  private fun pickupDropoffViewModel(): PickupDropoffViewModel? {
-    return findFragment<PickupDropoffFragment>(PickupDropoffFragment.TAG)?.let {
-      ViewModelProviders
-          .of(it, viewModelFactory)
-          .get(PickupDropoffViewModel::class.java)
     }
   }
 
