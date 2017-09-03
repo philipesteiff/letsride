@@ -1,10 +1,12 @@
 package com.transportation.letsride.feature.pickupdropoff.widget
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import com.transportation.letsride.R
 import com.transportation.letsride.common.extensions.getColorCompat
+import com.transportation.letsride.data.model.Address
 import kotlinx.android.synthetic.main.view_address.view.*
 
 class AddressView @JvmOverloads constructor(
@@ -25,6 +27,16 @@ class AddressView @JvmOverloads constructor(
 
   }
 
+  fun applyAddress(address: Address?) {
+    address?.apply {
+      setAddressText(name)
+    } ?: setAddressNotFound()
+  }
+
+  private fun setAddressNotFound() {
+    setAddressText("Address not found")
+  }
+
   private fun setLayoutType(type: Int) {
     if (type == PICKUP_ADDRESS_TYPE) {
       "Pickup" to context.getColorCompat(R.color.colorAccent)
@@ -43,12 +55,12 @@ class AddressView @JvmOverloads constructor(
     textAddressInput.hint = textHint.orEmpty()
   }
 
-  fun setAddressText(address: String?) {
+  private fun setAddressText(address: String?) {
     textAddressInput.text = address.orEmpty()
   }
 
-  fun setOnAddressClickListener(clickListener: (String?) -> Unit) {
-    setOnClickListener { clickListener.invoke(textAddressInput.text.toString()) }
+  override fun onSaveInstanceState(): Parcelable {
+    return super.onSaveInstanceState()
   }
 
 }

@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.transportation.letsride.R
 import com.transportation.letsride.common.ui.activity.BaseActivity
+import com.transportation.letsride.data.model.Address
 import com.transportation.letsride.data.model.AutocompleteSuggestion
 import com.transportation.letsride.data.model.Prediction
 import io.reactivex.Observable
@@ -63,7 +64,7 @@ class SearchAddressActivity : BaseActivity() {
   companion object {
     const val EXTRA_ADDRESS = "extra_address"
 
-    fun getIntentWithAddress(context: Context, address: String?) = Intent(context, SearchAddressActivity::class.java)
+    fun getIntentWithAddress(context: Context, address: Address?) = Intent(context, SearchAddressActivity::class.java)
         .apply { putExtra(SearchAddressActivity.EXTRA_ADDRESS, address) }
   }
 

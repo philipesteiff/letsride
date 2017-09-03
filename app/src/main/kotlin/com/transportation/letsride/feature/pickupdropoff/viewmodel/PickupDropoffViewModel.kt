@@ -3,6 +3,7 @@ package com.transportation.letsride.feature.pickupdropoff.viewmodel
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
+import com.transportation.letsride.common.navigation.Navigator
 import com.transportation.letsride.common.util.plusAssign
 import com.transportation.letsride.common.viewmodel.BaseViewModel
 import com.transportation.letsride.data.executor.SchedulerProvider
@@ -13,16 +14,21 @@ import javax.inject.Inject
 
 class PickupDropoffViewModel @Inject constructor(
     private val locationRepository: Repository.Location,
-    private val schedulers: SchedulerProvider
+    private val schedulers: SchedulerProvider,
+    private val navigator: Navigator
 ) : BaseViewModel() {
 
-  val newMapLocation = MutableLiveData<LatLng>()
-
-  val addressChange = MediatorLiveData<Address?>().apply {
+  val pickupAddressChange = MediatorLiveData<Address?>().apply {
     addSource(newMapLocation) { latLng ->
       latLng?.run { findAddress(latLng) } ?: Timber.e("latlng was null")
     }
   }
+
+  val dropoffAddress = MutableLiveData<Address?>()
+
+  val newMapLocation = MutableLiveData<LatLng>()
+
+  val navigateTo
 
   private fun findAddress(latLng: LatLng) {
     disposables += locationRepository
@@ -30,7 +36,7 @@ class PickupDropoffViewModel @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
         .subscribe(
-            { address -> addressChange.value = address },
+            { address -> pickupAddressChange.value = address },
             { error -> Timber.e(error) }
         )
   }
@@ -39,5 +45,12 @@ class PickupDropoffViewModel @Inject constructor(
     newMapLocation.value = latLng
   }
 
+  fun onPickupAddressClicked() {
+    navigator.navigateToAddressSearch()
+  }
+
+  fun onDropoffAddressClicked() {
+    navigator.navigateToAddressSearch()
+  }
 
 }

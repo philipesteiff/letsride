@@ -8,7 +8,8 @@ import javax.inject.Singleton
 
 @Singleton
 class LetsRideViewModelFactory @Inject constructor(
-    val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>)
+    val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
+)
   : ViewModelProvider.Factory {
 
   override fun <T : ViewModel> create(modelClass: Class<T>): T {

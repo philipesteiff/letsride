@@ -50,12 +50,12 @@
       app:backgroundTint="@color/colorPrimaryDark"
       app:elevation="3dp"
       app:fabSize="normal"
-      app:layout_constraintBottom_toTopOf="@+id/pickupRouteContainer"
+      app:layout_constraintBottom_toTopOf="@+id/pickupDropoffAddressContainer"
       app:layout_constraintEnd_toEndOf="parent"
       app:srcCompat="@drawable/ic_near_me"/>
 
   <FrameLayout
-      android:id="@+id/pickupRouteContainer"
+      android:id="@+id/pickupDropoffAddressContainer"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginBottom="8dp"

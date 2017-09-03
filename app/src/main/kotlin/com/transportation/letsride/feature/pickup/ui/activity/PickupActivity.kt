@@ -29,15 +29,8 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
         .get(MapViewModel::class.java)
   })
 
-  // region Fragments
-
   var mapFragment: CustomMapFragment? = null
     get() = findFragment(CustomMapFragment.TAG)
-
-  var pickupDropoffFragment: PickupDropoffFragment? = null
-    get() = findFragment(PickupDropoffFragment.TAG)
-
-  // endregion
 
   private val disposables = CompositeDisposable()
 
@@ -68,7 +61,7 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   private fun attachViews() {
     supportFragmentManager.commitNowTransactions {
       it.attachFragment(CustomMapFragment.newInstance(), pickupMapContainer.id, CustomMapFragment.TAG)
-      it.attachFragment(PickupDropoffFragment.newInstance(), pickupRouteContainer.id, PickupDropoffFragment.TAG)
+      it.attachFragment(PickupDropoffFragment.newInstance(), pickupDropoffAddressContainer.id, PickupDropoffFragment.TAG)
     }
   }
 

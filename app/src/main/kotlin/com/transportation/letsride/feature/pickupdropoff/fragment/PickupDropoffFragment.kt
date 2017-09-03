@@ -12,7 +12,6 @@ import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.data.model.Address
 import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
 import com.transportation.letsride.feature.pickupdropoff.viewmodel.PickupDropoffViewModel
-import com.transportation.letsride.feature.search.activity.SearchAddressActivity
 import kotlinx.android.synthetic.main.fragment_pickup_dropoff.*
 
 class PickupDropoffFragment : BaseFragment() {
@@ -33,26 +32,27 @@ class PickupDropoffFragment : BaseFragment() {
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    listenData()
+    listenViews()
+  }
 
+  private fun listenViews() {
+    addressPickupView.setOnClickListener { viewModel.onPickupAddressClicked() }
+    addressDropoffView.setOnClickListener { viewModel.onDropoffAddressClicked() }
+  }
+
+  private fun listenData() {
     mapViewModel.currentMapCameraPosition
         .observe(this) { viewModel.newCurrentLocation(it!!) }
 
-    viewModel.addressChange.let {
-      it.observe(this, this::addressChanged)
+    viewModel.pickupAddressChange.let {
+      it.observe(this, this::pickupAddressChanged)
       it.observe(this, mapViewModel::addressChange)
     }
-
-
-//    addressPickupView.setOnAddressClickListener { address -> routePresenter.pickupAddressClick() }
-//    addressDropoffView.setOnAddressClickListener { address -> routePresenter.dropoffAddressClick() }
   }
 
-
-  private fun addressChanged(address: Address?) {
-    address?.run {
-      name.let(addressPickupView::setAddressText)
-    }
-
+  private fun pickupAddressChanged(address: Address?) {
+    addressPickupView.applyAddress(address)
   }
 
   private fun handleAddressChangeError(error: Throwable) {
@@ -60,14 +60,15 @@ class PickupDropoffFragment : BaseFragment() {
   }
 
 
+
   override fun onPause() {
     super.onPause()
   }
 
   fun showSeachAddressView(currentAddress: String?) {
-    SearchAddressActivity
-        .getIntentWithAddress(activity, currentAddress)
-        .let { startActivity(it) }
+//    SearchAddressActivity
+//        .getIntentWithAddress(activity, currentAddress)
+//        .let { startActivity(it) }
   }
 
   companion object {

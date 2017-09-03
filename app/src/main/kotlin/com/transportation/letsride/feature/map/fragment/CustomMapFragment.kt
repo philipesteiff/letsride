@@ -10,8 +10,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.transportation.letsride.R
 import com.transportation.letsride.common.util.plusAssign
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
