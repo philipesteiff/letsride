@@ -26,6 +26,8 @@ abstract class BasePickupPermissionActivity : BaseActivity() {
   @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
   abstract fun onLocationPermissionGranted()
 
+  abstract fun onLocationPermissionDenied()
+
   @OnShowRationale(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
   fun showRationaleForLocationPermission(request: PermissionRequest) {
     AlertDialog.Builder(this)

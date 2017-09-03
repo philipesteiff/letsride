@@ -20,11 +20,9 @@ fun <T> LiveData<T>.asPublisher(lifecycleOwner: LifecycleOwner): Flowable<T> {
   )
 }
 
-fun <T> LiveData<T>.observe(owner: LifecycleOwner, observer: (T) -> Unit) {
+fun <T> LiveData<T>.observe(owner: LifecycleOwner, observer: (T?) -> Unit) {
   observe(owner, Observer<T> { v ->
-    if (v != null)
       observer.invoke(v)
-    else throw IllegalStateException("This observer receives a null. Owner: $owner")
   })
 }
 

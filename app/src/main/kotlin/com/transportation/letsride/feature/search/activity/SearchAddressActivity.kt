@@ -1,29 +1,44 @@
 package com.transportation.letsride.feature.search.activity
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.transportation.letsride.R
 import com.transportation.letsride.common.ui.activity.BaseActivity
+import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.data.model.Address
 import com.transportation.letsride.data.model.AutocompleteSuggestion
 import com.transportation.letsride.data.model.Prediction
+import com.transportation.letsride.feature.search.adapter.SearchAddressAdapter
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_search_address.editSearchAddress
+import kotlinx.android.synthetic.main.activity_search_address.*
 import java.util.concurrent.TimeUnit
 
 class SearchAddressActivity : BaseActivity() {
 
-//  val adapter by unsafeLazy { SearchAddressAdapter().apply { onClick = presenter::onClickSuggestion } }
+  val adapter by unsafeLazy {
+    //    SearchAddressAdapter()
+//        .apply { onClick = presenter::onClickSuggestion }
+    SearchAddressAdapter()
+        .apply {
+          onClick = {
+          }
+        }
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_search_address)
-
-//    recyclerSearchAddress.adapter = adapter
+    toolbar.setOnClickListener {
+      val intent = Intent()
+          .putExtra(EXTRA_ADDRESS, Address("VeioDoRsult", "", "", 0.toDouble(), 0.toDouble()))
+      setResult(Activity.RESULT_OK, intent).also { finish() }
+    }
+    recyclerSearchAddress.adapter = adapter
 
 //    presenter.bindView(this)
 //    presenter.onViewReady(savedInstanceState, intent.extras)

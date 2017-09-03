@@ -95,7 +95,6 @@ class CustomMapFragment : SupportMapFragment() {
 
     val onCameraIdle = Observable.create<LatLng> { emitter ->
       setOnCameraIdleListener {
-        Timber.d("blahahhh")
         emitter.onNext(cameraPosition.target)
       }
 

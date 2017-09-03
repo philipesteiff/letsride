@@ -2,6 +2,7 @@ package com.transportation.letsride.feature.pickupdropoff.viewmodel
 
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
+import android.content.Context
 import com.google.android.gms.maps.model.LatLng
 import com.transportation.letsride.common.navigation.Navigator
 import com.transportation.letsride.common.util.plusAssign
@@ -12,11 +13,12 @@ import com.transportation.letsride.data.repository.Repository
 import timber.log.Timber
 import javax.inject.Inject
 
-class PickupDropoffViewModel @Inject constructor(
+class PickupDropOffViewModel @Inject constructor(
     private val locationRepository: Repository.Location,
-    private val schedulers: SchedulerProvider,
-    private val navigator: Navigator
+    private val schedulers: SchedulerProvider
 ) : BaseViewModel() {
+
+  val newMapLocation = MutableLiveData<LatLng>()
 
   val pickupAddressChange = MediatorLiveData<Address?>().apply {
     addSource(newMapLocation) { latLng ->
@@ -24,11 +26,10 @@ class PickupDropoffViewModel @Inject constructor(
     }
   }
 
-  val dropoffAddress = MutableLiveData<Address?>()
+  val dropOffAddressChange = MutableLiveData<Address?>()
 
-  val newMapLocation = MutableLiveData<LatLng>()
-
-  val navigateTo
+  val navigateToPickupAddressSearch = MutableLiveData<Address?>()
+  val navigateToDropOffAddressSearch = MutableLiveData<Address?>()
 
   private fun findAddress(latLng: LatLng) {
     disposables += locationRepository
@@ -46,11 +47,19 @@ class PickupDropoffViewModel @Inject constructor(
   }
 
   fun onPickupAddressClicked() {
-    navigator.navigateToAddressSearch()
+    navigateToPickupAddressSearch.value = pickupAddressChange.value
   }
 
   fun onDropoffAddressClicked() {
-    navigator.navigateToAddressSearch()
+    navigateToDropOffAddressSearch.value = dropOffAddressChange.value
+  }
+
+  fun onReceivePickupAddressResult(address: Address) {
+    pickupAddressChange.value = address
+  }
+
+  fun onReveiveDropOffAddressResult(address: Address) {
+    dropOffAddressChange.value = address
   }
 
 }

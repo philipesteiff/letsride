@@ -1,6 +1,7 @@
 package com.transportation.letsride.feature.pickup.ui.activity
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.google.android.gms.maps.model.LatLng
@@ -15,8 +16,8 @@ import com.transportation.letsride.feature.map.fragment.CustomMapFragment
 import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
 import com.transportation.letsride.feature.pickupdropoff.fragment.PickupDropoffFragment
 import dagger.android.DispatchingAndroidInjector
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_pickup.*
+import timber.log.Timber
 import javax.inject.Inject
 
 class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomMapFragment.MapListener {
@@ -32,9 +33,8 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   var mapFragment: CustomMapFragment? = null
     get() = findFragment(CustomMapFragment.TAG)
 
-  private val disposables = CompositeDisposable()
-
   override fun onCreate(savedInstanceState: Bundle?) {
+    Timber.d("onCreate")
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_pickup)
 
@@ -43,11 +43,7 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
 
     listenData()
     listenViews()
-  }
 
-  override fun onDestroy() {
-    super.onDestroy()
-    disposables.clear()
   }
 
   override fun mapDragged(newLocation: LatLng) {
@@ -55,7 +51,11 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   }
 
   override fun onLocationPermissionGranted() {
-    viewModel.enableMyLocation()
+    viewModel.onPermissionGranted(true)
+  }
+
+  override fun onLocationPermissionDenied() {
+    viewModel.onPermissionGranted(false)
   }
 
   private fun attachViews() {
@@ -77,11 +77,11 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
 
   }
 
-  private fun moveMapToLocation(latLng: LatLng) {
+  private fun moveMapToLocation(latLng: LatLng?) {
     mapFragment?.moveMapToLocation(latLng)
   }
 
-  private fun showMyLocationButton(enabled: Boolean) {
+  private fun showMyLocationButton(enabled: Boolean?) {
     when (enabled) {
       true -> buttonPickupMyLocation.show()
       false -> buttonPickupMyLocation.hide()

@@ -16,33 +16,44 @@ class MapViewModel @Inject constructor(
     val locationRepository: Repository.Location
 ) : BaseViewModel() {
 
-  val myLocationEnabled = MutableLiveData<Boolean>()
-  val addressChange = MutableLiveData<Address?>()
+  var initialLocationDisposable = Disposables.empty()
+
+  val permissionGranted = MediatorLiveData<Boolean>()
+  val myLocationEnabled = MediatorLiveData<Boolean>().apply {
+    addSource(permissionGranted) { it?.let { enableMyLocation(it) } }
+  }
+  val pickupAddressChange = MutableLiveData<Address?>()
   val mapDragged = MutableLiveData<LatLng>()
   val currentMapCameraPosition = MediatorLiveData<LatLng>().apply {
+    addSource(permissionGranted) { granted -> shouldRetrieveCurrentPosition(granted) }
     addSource(mapDragged) { value = it }
   }
 
-  var initialLocationDisposable = Disposables.empty()
 
-  init {
-    retrieveCurrentPosition()
-  }
-
-  fun enableMyLocation() {
-    myLocationEnabled.value = true
+  fun enableMyLocation(enabled: Boolean) {
+    myLocationEnabled.value = enabled
   }
 
   fun mapDragged(newPosition: LatLng) {
     mapDragged.value = newPosition
   }
 
-  fun addressChange(address: Address?) {
-    addressChange.postValue(address)
+  fun pickupAddressChanged(address: Address?) {
+    pickupAddressChange.postValue(address)
   }
 
   fun moveMapToMyLocation() {
     retrieveCurrentPosition()
+  }
+
+  fun onPermissionGranted(granted: Boolean) {
+    permissionGranted.value = granted
+  }
+
+  private fun shouldRetrieveCurrentPosition(permissionGranted: Boolean?) {
+    if (permissionGranted != null) {
+      if (permissionGranted) retrieveCurrentPosition()
+    }
   }
 
   private fun retrieveCurrentPosition() {
