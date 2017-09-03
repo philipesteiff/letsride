@@ -7,13 +7,12 @@ import com.transportation.letsride.data.network.interceptor.AuthHeaders
 import com.transportation.letsride.data.network.interceptor.HeaderInterceptor
 import dagger.Module
 import dagger.Provides
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.Locale
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
@@ -48,7 +47,7 @@ open class NetworkModule {
   fun providesLoggingInterceptor(): HttpLoggingInterceptor {
     return HttpLoggingInterceptor().apply {
       level = when {
-        BuildConfig.DEBUG -> HttpLoggingInterceptor.Level.BODY
+        BuildConfig.DEBUG -> HttpLoggingInterceptor.Level.BASIC
         else -> HttpLoggingInterceptor.Level.NONE
       }
     }

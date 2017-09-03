@@ -1,14 +1,7 @@
 package com.transportation.letsride.feature.map.fragment
 
-import android.annotation.SuppressLint
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.LifecycleRegistry
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.view.View
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -16,115 +9,103 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.transportation.letsride.R
-import com.transportation.letsride.common.di.Injectable
 import com.transportation.letsride.common.util.plusAssign
-import com.transportation.letsride.common.util.unsafeLazy
-import com.transportation.letsride.feature.map.viewmodel.CustomMapViewModel
-import com.transportation.letsride.feature.pickup.viewmodel.PickupViewModel
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import javax.inject.Inject
 
-class CustomMapFragment : SupportMapFragment(), LifecycleOwner, Injectable {
+class CustomMapFragment : SupportMapFragment() {
 
-  @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-
-  private var lifecycleRegistry = LifecycleRegistry(this)
-
-  private val disposables = CompositeDisposable()
-
-  val sharedViewModel: PickupViewModel by unsafeLazy {
-    ViewModelProviders.of(activity, viewModelFactory)
-        .get(PickupViewModel::class.java)
+  interface MapListener {
+    fun mapDragged(newLocation: LatLng)
   }
 
-  val viewModel: CustomMapViewModel by unsafeLazy {
-    ViewModelProviders.of(this, viewModelFactory)
-        .get(CustomMapViewModel::class.java)
-  }
+  var listener: MapListener? = null
 
-  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-
-    viewModel.currentMapPosition
-        .observe(this, Observer { moveMap(it) })
-
-
-    sharedViewModel.addressChange
-        .observe(activity as LifecycleOwner, Observer {
-          viewModel.addressChange(it)
-        })
-
-  }
-
-  private fun moveMap(it: LatLng?) {
-    getMapAsync { googleMap ->
-      it?.let { googleMap.moveCamera(CameraUpdateFactory.newLatLng(it)) }
+  override fun onAttach(context: Context?) {
+    super.onAttach(context)
+    when (context) {
+      is MapListener -> listener = context
+      else -> throw RuntimeException("$context must implement CustomMapFragment.MapListener")
     }
   }
 
-  override fun onDestroy() {
-    super.onDestroy()
-    disposables.clear()
+  private var disposables = CompositeDisposable()
+
+  override fun onActivityCreated(bundle: Bundle?) {
+    super.onActivityCreated(bundle)
+    initMap()
   }
 
-  override fun getLifecycle() = lifecycleRegistry
+  private fun initMap() {
+    Single.fromCallable { loadMapStyleOptions() }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { mapStyle ->
+          getMapAsync {
+            it.apply {
+              setMapStyle(mapStyle)
 
-  @SuppressLint("MissingPermission")
-  fun locationPermissionGranted() {
-    getMapAsync { googleMap ->
-      googleMap.apply {
-        isMyLocationEnabled = true
-        setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.midnight_map_style))
-        listenMapEvents(googleMap)
+              isIndoorEnabled = false
+              uiSettings?.apply {
+                isCompassEnabled = false
+                isRotateGesturesEnabled = false
+                isMyLocationButtonEnabled = false
+                isMapToolbarEnabled = false
+                isRotateGesturesEnabled = false
+              }
+
+              it.onMapDragged()
+                  .subscribe({ listener?.mapDragged(it) })
+                  .also { disposables += it }
+
+            }
+          }
+        }
+  }
+
+  private fun loadMapStyleOptions() = MapStyleOptions
+      .loadRawResourceStyle(context, R.raw.map_style)
+
+  fun moveMapToLocation(newLocation: LatLng?) {
+    getMapAsync {
+      val cameraPosition = CameraPosition.Builder()
+          .target(newLocation)
+          .zoom(DEFAULT_ZOOM)
+          .build()
+      it.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+    }
+  }
+
+  private fun GoogleMap.onMapDragged(): Observable<LatLng> {
+    val onCameraMoveStarted = Observable.create<Int> { emitter ->
+      setOnCameraMoveStartedListener {
+        Timber.d("setOnCameraMoveStartedListener")
+        emitter.onNext(it)
+      }
+
+      emitter.setCancellable {
+        Timber.d("Removing OnCameraMoveStartedListener")
+        setOnCameraMoveStartedListener(null)
       }
     }
-  }
 
-  private fun listenMapEvents(googleMap: GoogleMap) {
-    viewModel.mapReady()
+    val onCameraIdle = Observable.create<LatLng> { emitter ->
+      setOnCameraIdleListener {
+        Timber.d("blahahhh")
+        emitter.onNext(cameraPosition.target)
+      }
 
-    disposables += googleMap.onMapDragged()
-        .doOnNext { Timber.d("MapDragged: $it") }
-        .subscribe(
-            { latLng ->
-              viewModel.mapDragged(latLng)
-              sharedViewModel.mapDragged(latLng)
-            },
-            { Timber.e(it) }
-        )
-  }
-
-  private fun GoogleMap.onMapDragged(): Flowable<LatLng> {
-    val onCameraMoveStarted = Flowable.create<Int>(
-        { emitter ->
-          setOnCameraMoveStartedListener {
-            emitter.onNext(it)
-          }
-
-          emitter.setCancellable {
-            Timber.d("Removing OnCameraMoveStartedListener")
-            setOnCameraMoveStartedListener(null)
-          }
-        },
-        BackpressureStrategy.BUFFER
-    )
-
-    val onCameraIdle = Flowable.create<LatLng>(
-        { emitter ->
-          setOnCameraIdleListener {
-            emitter.onNext(cameraPosition.target)
-          }
-
-          emitter.setCancellable {
-            Timber.d("Removing OnCameraIdleListener")
-            setOnCameraIdleListener(null)
-          }
-        },
-        BackpressureStrategy.BUFFER
-    )
+      emitter.setCancellable {
+        Timber.d("Removing OnCameraIdleListener")
+        setOnCameraIdleListener(null)
+      }
+    }
 
     return onCameraMoveStarted
         .filter { it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE }
@@ -134,6 +115,7 @@ class CustomMapFragment : SupportMapFragment(), LifecycleOwner, Injectable {
 
   companion object {
     val TAG: String = CustomMapFragment::class.java.canonicalName
+    val DEFAULT_ZOOM = 17f
 
     fun newInstance(): CustomMapFragment {
       return CustomMapFragment().apply {

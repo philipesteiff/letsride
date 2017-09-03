@@ -16,14 +16,11 @@ class PickupDropoffViewModel @Inject constructor(
     private val schedulers: SchedulerProvider
 ) : BaseViewModel() {
 
-  val currentLocation = MutableLiveData<LatLng>()
+  val newMapLocation = MutableLiveData<LatLng>()
 
   val addressChange = MediatorLiveData<Address?>().apply {
-    addSource(currentLocation) { latLng ->
-      if (latLng != null)
-        findAddress(latLng)
-      else
-        Timber.e("latlng was null")
+    addSource(newMapLocation) { latLng ->
+      latLng?.run { findAddress(latLng) } ?: Timber.e("latlng was null")
     }
   }
 
@@ -39,7 +36,7 @@ class PickupDropoffViewModel @Inject constructor(
   }
 
   fun newCurrentLocation(latLng: LatLng) {
-    currentLocation.value = latLng
+    newMapLocation.value = latLng
   }
 
 

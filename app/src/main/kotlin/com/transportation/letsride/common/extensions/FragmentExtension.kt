@@ -14,7 +14,7 @@ fun <F : Fragment> FragmentActivity.findFragment(tag: String): F? {
 }
 
 fun FragmentManager.commitNowTransactions(func: FragmentManager.(FragmentTransaction) -> Unit) {
-  beginTransaction().apply { func(this) }.commitNow()
+  beginTransaction().apply { func(this) }.commit()
 }
 
 fun FragmentTransaction.attachFragment(fragment: Fragment, @IdRes content: Int, tag: String) {

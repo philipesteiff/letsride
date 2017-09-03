@@ -9,12 +9,14 @@ import com.google.android.gms.location.LocationListener
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.location.LocationServices
-import com.transportation.letsride.common.extensions.isDifferent
 import com.transportation.letsride.common.util.unsafeLazy
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
+
+// TODO Alguma subscription não esta fechando, deixando a conexão do apiClient aberta.
 
 @Singleton
 class LocationDataSource @Inject constructor(
@@ -23,8 +25,6 @@ class LocationDataSource @Inject constructor(
     GoogleApiClient.OnConnectionFailedListener,
     GoogleApiClient.ConnectionCallbacks {
 
-  private val currentLocationData = LocationSourceResponse.NewLocation(Location("empty"))
-
   private val locationRequest: LocationRequest by unsafeLazy {
     LocationRequest()
         .setPriority(PRIORITY_HIGH_ACCURACY)
@@ -32,28 +32,29 @@ class LocationDataSource @Inject constructor(
         .setInterval(INTERVAL_UPDATES)
   }
 
-  private var locations: BehaviorSubject<LocationSourceResponse> = BehaviorSubject.create<LocationSourceResponse>().apply {
-    doOnSubscribe { connect() }
-    doOnDispose { if (!hasObservers()) disconnect() }
-  }
+  private var locations = BehaviorSubject.create<Location>()
 
-  fun getLocationsStream(): Observable<LocationSourceResponse> = locations
+  fun getLocationsStream(): Observable<Location> = locations
+      .doOnNext { Timber.d("Location: $it") }
+      .doOnSubscribe { Timber.d("New subscription") }
+      .doOnSubscribe { connect() }
+      .doOnDispose { disconnect() }
 
   private fun connect() {
-    googleApiClient.run {
-      if (!isConnected) {
-        registerConnectionCallbacks(this@LocationDataSource)
-        connect()
-      }
+    if (!googleApiClient.isConnected) {
+      googleApiClient.registerConnectionCallbacks(this@LocationDataSource)
+      googleApiClient.connect()
+
+      Timber.d("Connected")
     }
   }
 
   private fun disconnect() {
-    googleApiClient.run {
-      if (isConnected)
-        LocationServices.FusedLocationApi.removeLocationUpdates(this, this@LocationDataSource)
-
-      disconnect()
+    if (!locations.hasObservers()) {
+      googleApiClient.disconnect()
+      Timber.d("Disconnected")
+    } else {
+      Timber.d("Has not disconnected yet. Reason: has observers.")
     }
   }
 
@@ -68,33 +69,26 @@ class LocationDataSource @Inject constructor(
   }
 
   override fun onConnectionFailed(connectionResult: ConnectionResult) {
-    locations.onNext(LocationSourceResponse.ConnectionFailed())
+    LocationSourceConnectionFailedException(connectionResult.errorMessage.orEmpty())
+        .let { locations.onError(it) }
   }
 
-  override fun onConnectionSuspended(connectionSuspended: Int) {
-
-  }
+  override fun onConnectionSuspended(connectionSuspended: Int) {}
 
   @SuppressLint("MissingPermission")
   private fun startLocationUpdates() {
-    LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this)
+    if (googleApiClient.isConnected)
+      LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this)
   }
 
   @SuppressLint("MissingPermission")
   private fun sendLastLocation() {
     val lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient)
-    val currentLocation = currentLocationData.location
-    lastLocation
-        .takeIf { it isDifferent currentLocation }
-        .let { sendLocation(it) }
+    sendLocation(lastLocation)
   }
 
   private fun sendLocation(newLocation: Location?) {
-    newLocation?.let {
-      currentLocationData
-          .apply { location = it }
-          .let { locations.onNext(it) }
-    }
+    newLocation?.let { locations.onNext(it) }
   }
 
   companion object {
@@ -104,9 +98,5 @@ class LocationDataSource @Inject constructor(
 
 }
 
-sealed class LocationSourceResponse {
-  class NewLocation(var location: Location) : LocationSourceResponse()
-  class ConnectionFailed : LocationSourceResponse()
-}
-
+class LocationSourceConnectionFailedException(message: String) : Exception(message)
 

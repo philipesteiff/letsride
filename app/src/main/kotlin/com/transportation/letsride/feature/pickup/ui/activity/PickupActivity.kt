@@ -1,35 +1,45 @@
 package com.transportation.letsride.feature.pickup.ui.activity
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
-import android.widget.Toast
 import com.google.android.gms.maps.model.LatLng
 import com.transportation.letsride.R
 import com.transportation.letsride.common.di.FragmentInjector
 import com.transportation.letsride.common.extensions.attachFragment
 import com.transportation.letsride.common.extensions.commitNowTransactions
 import com.transportation.letsride.common.extensions.findFragment
-import com.transportation.letsride.common.ui.activity.BaseActivity
+import com.transportation.letsride.common.util.observe
 import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.feature.map.fragment.CustomMapFragment
-import com.transportation.letsride.feature.map.viewmodel.CustomMapViewModel
-import com.transportation.letsride.feature.pickup.viewmodel.PickupViewModel
+import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
 import com.transportation.letsride.feature.pickupdropoff.fragment.PickupDropoffFragment
-import com.transportation.letsride.feature.pickupdropoff.viewmodel.PickupDropoffViewModel
 import dagger.android.DispatchingAndroidInjector
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_pickup.*
-import permissions.dispatcher.*
 import javax.inject.Inject
 
-@RuntimePermissions
-class PickupActivity : BaseActivity(), FragmentInjector {
+class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomMapFragment.MapListener {
 
   @Inject
   override lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
+
+  val viewModel: MapViewModel by unsafeLazy({
+    ViewModelProviders.of(this, viewModelFactory)
+        .get(MapViewModel::class.java)
+  })
+
+  // region Fragments
+
+  var mapFragment: CustomMapFragment? = null
+    get() = findFragment(CustomMapFragment.TAG)
+
+  var pickupDropoffFragment: PickupDropoffFragment? = null
+    get() = findFragment(PickupDropoffFragment.TAG)
+
+  // endregion
+
+  private val disposables = CompositeDisposable()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -38,12 +48,21 @@ class PickupActivity : BaseActivity(), FragmentInjector {
     if (savedInstanceState == null)
       attachViews()
 
-    PickupActivityPermissionsDispatcher.onLocationPermissionGrantedWithCheck(this)
+    listenData()
+    listenViews()
   }
 
-  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    PickupActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults)
+  override fun onDestroy() {
+    super.onDestroy()
+    disposables.clear()
+  }
+
+  override fun mapDragged(newLocation: LatLng) {
+    viewModel.mapDragged(newLocation)
+  }
+
+  override fun onLocationPermissionGranted() {
+    viewModel.enableMyLocation()
   }
 
   private fun attachViews() {
@@ -53,30 +72,27 @@ class PickupActivity : BaseActivity(), FragmentInjector {
     }
   }
 
-  @NeedsPermission(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
-  fun onLocationPermissionGranted() {
-    findFragment<CustomMapFragment>(CustomMapFragment.TAG)
-        ?.locationPermissionGranted()
+  private fun listenViews() {
+    buttonPickupMyLocation.setOnClickListener { viewModel.moveMapToMyLocation() }
   }
 
-  @OnShowRationale(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
-  fun showRationaleForLocationPermission(request: PermissionRequest) {
-    AlertDialog.Builder(this)
-        .setMessage(R.string.permission_location_rationale)
-        .setPositiveButton(R.string.button_allow, { _, _ -> request.proceed() })
-        .setNegativeButton(R.string.button_deny, { _, _ -> request.cancel() })
-        .show()
+  private fun listenData() {
+    viewModel.myLocationEnabled
+        .observe(this, this::showMyLocationButton)
+    viewModel.currentMapCameraPosition
+        .observe(this, this::moveMapToLocation)
+
   }
 
-
-  @OnPermissionDenied(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
-  fun showPermissionDeniedMessageForLocation() {
-    Toast.makeText(this, R.string.location_permission_denied, Toast.LENGTH_SHORT).show()
+  private fun moveMapToLocation(latLng: LatLng) {
+    mapFragment?.moveMapToLocation(latLng)
   }
 
-  @OnNeverAskAgain(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
-  fun showNeverAskForLocationPermission() {
-    Toast.makeText(this, R.string.location_permission_permanently_denied_message, Toast.LENGTH_SHORT).show()
+  private fun showMyLocationButton(enabled: Boolean) {
+    when (enabled) {
+      true -> buttonPickupMyLocation.show()
+      false -> buttonPickupMyLocation.hide()
+    }
   }
 
 }

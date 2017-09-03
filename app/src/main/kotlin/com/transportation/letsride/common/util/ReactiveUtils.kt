@@ -1,10 +1,6 @@
 package com.transportation.letsride.common.util
 
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.LiveDataReactiveStreams
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.Transformations
+import android.arch.lifecycle.*
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -24,12 +20,13 @@ fun <T> LiveData<T>.asPublisher(lifecycleOwner: LifecycleOwner): Flowable<T> {
   )
 }
 
-//fun <T> LiveData<T>.observe(owner: LifecycleOwner, observer: (T?) -> Unit) = observe(
-//    owner,
-//    Observer<T> { v ->
-//      observer.invoke(v)
-//    }
-//)
+fun <T> LiveData<T>.observe(owner: LifecycleOwner, observer: (T) -> Unit) {
+  observe(owner, Observer<T> { v ->
+    if (v != null)
+      observer.invoke(v)
+    else throw IllegalStateException("This observer receives a null. Owner: $owner")
+  })
+}
 
 fun <X, Y> LiveData<X>.switchMap(func: (X) -> LiveData<Y>): LiveData<Y>
     = Transformations.switchMap(this, func)
