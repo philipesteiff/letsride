@@ -25,8 +25,9 @@ class MapViewModel @Inject constructor(
   val pickupAddressChange = MutableLiveData<Address?>()
   val mapDragged = MutableLiveData<LatLng>()
   val currentMapCameraPosition = MediatorLiveData<LatLng>().apply {
-    addSource(permissionGranted) { granted -> shouldRetrieveCurrentPosition(granted) }
+//    addSource(permissionGranted) { granted -> shouldRetrieveCurrentPosition(granted) }
     addSource(mapDragged) { value = it }
+    addSource(pickupAddressChange) { moveMapToAddress(it) }
   }
 
   fun enableMyLocation(enabled: Boolean) {
@@ -47,6 +48,10 @@ class MapViewModel @Inject constructor(
 
   fun onPermissionGranted(granted: Boolean) {
     permissionGranted.value = granted
+  }
+
+  private fun MapViewModel.moveMapToAddress(address: Address?) {
+    address?.let { currentMapCameraPosition.value = it.getLatLng() }
   }
 
   private fun shouldRetrieveCurrentPosition(permissionGranted: Boolean?) {

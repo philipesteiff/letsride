@@ -14,6 +14,7 @@ import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.feature.map.fragment.CustomMapFragment
 import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
 import com.transportation.letsride.feature.pickupdropoff.ui.fragment.PickupDropoffFragment
+import com.transportation.letsride.feature.pickupdropoff.viewmodel.PickupDropOffViewModel
 import dagger.android.DispatchingAndroidInjector
 import kotlinx.android.synthetic.main.activity_pickup.*
 import timber.log.Timber
@@ -73,7 +74,6 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
         .observe(this, this::showMyLocationButton)
     viewModel.currentMapCameraPosition
         .observe(this, this::moveMapToLocation)
-
   }
 
   private fun moveMapToLocation(latLng: LatLng?) {

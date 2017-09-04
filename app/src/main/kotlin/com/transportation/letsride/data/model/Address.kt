@@ -2,6 +2,7 @@ package com.transportation.letsride.data.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.android.gms.maps.model.LatLng
 
 data class Address(
     val name: String,
@@ -10,6 +11,8 @@ data class Address(
     val latitude: Double,
     val longitude: Double
 ) : Parcelable {
+
+  fun getLatLng() = LatLng(latitude, longitude)
 
   constructor(parcel: Parcel) : this(
       parcel.readString(),

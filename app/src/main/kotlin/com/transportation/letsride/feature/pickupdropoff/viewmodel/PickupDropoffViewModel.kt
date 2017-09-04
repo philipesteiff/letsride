@@ -26,7 +26,6 @@ class PickupDropOffViewModel @Inject constructor(
 
   val dropOffAddressChange = MutableLiveData<Address?>()
 
-
   val navigateToPickupAddressSearch = MutableLiveData<Unit>()
   val navigateToDropOffAddressSearch = MutableLiveData<Unit>()
 
@@ -54,7 +53,7 @@ class PickupDropOffViewModel @Inject constructor(
   }
 
   fun onReceivePickupAddressResult(address: Address) {
-    pickupAddressChange.value = address.
+    pickupAddressChange.value = address
   }
 
   fun onReveiveDropOffAddressResult(address: Address) {
