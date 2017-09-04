@@ -72,7 +72,9 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   private fun listenData() {
     viewModel.myLocationEnabled
         .observe(this, this::showMyLocationButton)
-    viewModel.currentMapCameraPosition
+//    viewModel.currentMapCameraPosition
+//        .observe(this, this::moveMapToLocation)
+        viewModel.balh
         .observe(this, this::moveMapToLocation)
   }
 

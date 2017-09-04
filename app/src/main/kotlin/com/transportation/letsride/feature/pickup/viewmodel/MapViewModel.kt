@@ -22,12 +22,15 @@ class MapViewModel @Inject constructor(
   val myLocationEnabled = MediatorLiveData<Boolean>().apply {
     addSource(permissionGranted) { it?.let { enableMyLocation(it) } }
   }
-  val pickupAddressChange = MutableLiveData<Address?>()
+  //  val pickupAddressChange = MutableLiveData<Address?>()
   val mapDragged = MutableLiveData<LatLng>()
   val currentMapCameraPosition = MediatorLiveData<LatLng>().apply {
-//    addSource(permissionGranted) { granted -> shouldRetrieveCurrentPosition(granted) }
+    addSource(permissionGranted) { granted -> shouldRetrieveCurrentPosition(granted) }
     addSource(mapDragged) { value = it }
-    addSource(pickupAddressChange) { moveMapToAddress(it) }
+
+  }
+  val balh = MediatorLiveData<LatLng>().apply {
+//    addSource(pickupAddressChange) { moveMapToAddress(it) }
   }
 
   fun enableMyLocation(enabled: Boolean) {
@@ -39,7 +42,9 @@ class MapViewModel @Inject constructor(
   }
 
   fun pickupAddressChanged(address: Address?) {
-    pickupAddressChange.postValue(address)
+    address?.let { balh.value = address.getLatLng() }
+
+//    pickupAddressChange.postValue(address)
   }
 
   fun moveMapToMyLocation() {
@@ -50,7 +55,7 @@ class MapViewModel @Inject constructor(
     permissionGranted.value = granted
   }
 
-  private fun MapViewModel.moveMapToAddress(address: Address?) {
+  private fun moveMapToAddress(address: Address?) {
     address?.let { currentMapCameraPosition.value = it.getLatLng() }
   }
 
@@ -64,7 +69,7 @@ class MapViewModel @Inject constructor(
     initialLocationDisposable = locationRepository.location().take(1)
         .subscribe(
             { newLocation ->
-              currentMapCameraPosition.postValue(newLocation.toLatLng())
+              balh.postValue(newLocation.toLatLng())
               initialLocationDisposable.dispose()
             },
             { error -> Timber.e(error) }

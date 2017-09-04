@@ -30,8 +30,8 @@ data class GeocodeResult(
         name = formattedAddress,
         country = getCountry(),
         city = getCity(),
-        latitude = geometry.location.latitude,
-        longitude = geometry.location.longitude
+        latitude = geometry.location.lat,
+        longitude = geometry.location.lng
     )
   }
 
