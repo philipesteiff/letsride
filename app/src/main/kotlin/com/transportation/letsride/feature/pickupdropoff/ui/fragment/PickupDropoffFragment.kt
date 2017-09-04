@@ -1,4 +1,4 @@
-package com.transportation.letsride.feature.pickupdropoff.fragment
+package com.transportation.letsride.feature.pickupdropoff.ui.fragment
 
 import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
@@ -15,7 +15,7 @@ import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.data.model.Address
 import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
 import com.transportation.letsride.feature.pickupdropoff.viewmodel.PickupDropOffViewModel
-import com.transportation.letsride.feature.search.activity.SearchAddressActivity
+import com.transportation.letsride.feature.search.ui.activity.SearchAddressActivity
 import kotlinx.android.synthetic.main.fragment_pickup_dropoff.*
 import javax.inject.Inject
 
@@ -44,7 +44,7 @@ class PickupDropoffFragment : BaseFragment() {
     listenViews()
   }
 
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     when (requestCode) {
       PICKUP_ADDRESS_REQUEST -> shouldExtractData(resultCode, data) { viewModel.onReceivePickupAddressResult(it) }
@@ -52,9 +52,11 @@ class PickupDropoffFragment : BaseFragment() {
     }
   }
 
-  private fun shouldExtractData(resultCode: Int, data: Intent, resultOk: (Address) -> Unit) {
-    if (resultCode == Activity.RESULT_OK)
-      resultOk(data.getParcelableExtra<Address>(SearchAddressActivity.EXTRA_ADDRESS))
+  private fun shouldExtractData(resultCode: Int, data: Intent?, resultOk: (Address) -> Unit) {
+    if (resultCode == Activity.RESULT_OK) {
+      data?.getParcelableExtra<Address?>(SearchAddressActivity.EXTRA_ADDRESS)
+          ?.let(resultOk)
+    }
   }
 
   private fun listenViews() {
@@ -77,12 +79,12 @@ class PickupDropoffFragment : BaseFragment() {
         .observe(this, this::navigateToDropOffAddressSearch)
   }
 
-  private fun navigateToPickupAddressSearch(address: Address?) {
-    navigator.navigateToAddressSearchWithAddress(this, PICKUP_ADDRESS_REQUEST, address)
+  private fun navigateToPickupAddressSearch(unit: Unit?) {
+    navigator.navigateToAddressSearch(this, PICKUP_ADDRESS_REQUEST)
   }
 
-  private fun navigateToDropOffAddressSearch(address: Address?) {
-    navigator.navigateToAddressSearchWithAddress(this, DROPOFF_ADDRESS_REQUEST, address)
+  private fun navigateToDropOffAddressSearch(unit: Unit?) {
+    navigator.navigateToAddressSearch(this, DROPOFF_ADDRESS_REQUEST)
   }
 
   private fun pickupAddressChanged(address: Address?) {

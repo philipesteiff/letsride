@@ -1,6 +1,6 @@
 package com.transportation.letsride.data.model
 
-interface AutocompleteSuggestion {
+interface AutoCompleteSuggestion {
   fun getTitle(): String
   fun getSubtitle(): String
 }

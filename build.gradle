@@ -17,7 +17,6 @@ buildscript {
       // Reactive
       'rx_android'                    : '2.0.1',
       'rx_java'                       : '2.1.3',
-      'rx_binding'                    : '2.0.0',
 
       // Network
       'leak_canary'                   : '1.5.1',

@@ -22,7 +22,8 @@ interface AppInjector {
   private fun registerForAutomaticInjection(app: App) {
     app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
       override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-        handleActivity(activity)
+        AndroidInjection.inject(activity)
+        handleFragment(activity)
       }
 
       override fun onActivityPaused(activity: Activity) {}
@@ -34,21 +35,15 @@ interface AppInjector {
     })
   }
 
-  private fun handleActivity(activity: Activity) {
-    if (activity is HasSupportFragmentInjector) {
-      AndroidInjection.inject(activity)
-    }
+  private fun handleFragment(activity: Activity) {
     if (activity is FragmentActivity) {
-      activity.supportFragmentManager
-          .registerFragmentLifecycleCallbacks(
-              object : FragmentManager.FragmentLifecycleCallbacks() {
-                override fun onFragmentCreated(fm: FragmentManager, fragment: Fragment,
-                    savedInstanceState: Bundle?) {
-                  if (fragment is Injectable) {
-                    AndroidSupportInjection.inject(fragment)
-                  }
-                }
-              }, true)
+      activity.supportFragmentManager.registerFragmentLifecycleCallbacks(
+          object : FragmentManager.FragmentLifecycleCallbacks() {
+            override fun onFragmentCreated(fm: FragmentManager, fragment: Fragment, savedInstanceState: Bundle?) {
+              if (fragment is Injectable)
+                AndroidSupportInjection.inject(fragment)
+            }
+          }, true)
     }
   }
 

@@ -2,7 +2,7 @@ package com.transportation.letsride.common.di.module
 
 import com.transportation.letsride.data.api.GoogleMapsApi
 import com.transportation.letsride.data.api.JourneyApi
-import com.transportation.letsride.data.model.AutocompleteOptions
+import com.transportation.letsride.data.model.AutoCompleteOptions
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -29,8 +29,8 @@ class ApiModule {
   @Singleton
   fun providesAutocompleteOptions(
       locale: Locale
-  ): AutocompleteOptions {
-    return AutocompleteOptions(
+  ): AutoCompleteOptions {
+    return AutoCompleteOptions(
         language = locale.language,
         radius = TEN_KM_IN_METERS,
         components = listOf(DEFAULT_COUNTRY)

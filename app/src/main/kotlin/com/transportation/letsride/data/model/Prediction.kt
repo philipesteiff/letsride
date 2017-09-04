@@ -13,7 +13,7 @@ data class Prediction(
     val types: List<String> = listOf(),
     @SerializedName("matched_substrings") val matchedSubstrings: List<MatchedSubstring> = listOf(),
     @SerializedName("structured_formatting") val structuredFormatting: StructuredFormatting = StructuredFormatting("")
-) : AutocompleteSuggestion, Parcelable {
+) : AutoCompleteSuggestion, Parcelable {
 
   override fun getSubtitle() = structuredFormatting.secondaryText
 

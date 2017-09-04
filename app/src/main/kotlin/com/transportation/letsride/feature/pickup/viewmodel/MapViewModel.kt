@@ -7,13 +7,13 @@ import com.transportation.letsride.common.extensions.toLatLng
 import com.transportation.letsride.common.util.plusAssign
 import com.transportation.letsride.common.viewmodel.BaseViewModel
 import com.transportation.letsride.data.model.Address
-import com.transportation.letsride.data.repository.Repository
+import com.transportation.letsride.data.repository.LocationRepository
 import io.reactivex.disposables.Disposables
 import timber.log.Timber
 import javax.inject.Inject
 
 class MapViewModel @Inject constructor(
-    val locationRepository: Repository.Location
+    val locationRepository: LocationRepository
 ) : BaseViewModel() {
 
   var initialLocationDisposable = Disposables.empty()
@@ -28,7 +28,6 @@ class MapViewModel @Inject constructor(
     addSource(permissionGranted) { granted -> shouldRetrieveCurrentPosition(granted) }
     addSource(mapDragged) { value = it }
   }
-
 
   fun enableMyLocation(enabled: Boolean) {
     myLocationEnabled.value = enabled

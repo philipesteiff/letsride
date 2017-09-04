@@ -1,7 +1,7 @@
 package com.transportation.letsride.feature.pickupdropoff
 
 import com.transportation.letsride.common.di.scopes.PerFragment
-import com.transportation.letsride.feature.pickupdropoff.fragment.PickupDropoffFragment
+import com.transportation.letsride.feature.pickupdropoff.ui.fragment.PickupDropoffFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

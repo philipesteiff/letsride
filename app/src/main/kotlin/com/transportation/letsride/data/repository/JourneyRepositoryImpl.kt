@@ -5,9 +5,9 @@ import com.transportation.letsride.data.model.Estimates
 import com.transportation.letsride.data.model.JourneyEstimate
 import io.reactivex.Single
 
-class CategoryRepository(
+class JourneyRepositoryImpl(
     val journeyApi: JourneyApi
-) : Repository.Category {
+) : JourneyRepository {
 
   override fun estimates(journeyEstimate: JourneyEstimate): Single<Estimates> {
     return journeyApi.estimate(journeyEstimate)

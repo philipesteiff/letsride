@@ -18,8 +18,6 @@ data class Address(
       parcel.readDouble(),
       parcel.readDouble())
 
-  fun isValid() = true
-
   override fun writeToParcel(parcel: Parcel, flags: Int) {
     parcel.writeString(name)
     parcel.writeString(city)

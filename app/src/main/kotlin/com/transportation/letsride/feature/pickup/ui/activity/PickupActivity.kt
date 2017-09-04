@@ -1,7 +1,6 @@
 package com.transportation.letsride.feature.pickup.ui.activity
 
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.google.android.gms.maps.model.LatLng
@@ -14,7 +13,7 @@ import com.transportation.letsride.common.util.observe
 import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.feature.map.fragment.CustomMapFragment
 import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
-import com.transportation.letsride.feature.pickupdropoff.fragment.PickupDropoffFragment
+import com.transportation.letsride.feature.pickupdropoff.ui.fragment.PickupDropoffFragment
 import dagger.android.DispatchingAndroidInjector
 import kotlinx.android.synthetic.main.activity_pickup.*
 import timber.log.Timber

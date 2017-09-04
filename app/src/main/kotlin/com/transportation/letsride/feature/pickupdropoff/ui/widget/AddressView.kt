@@ -1,4 +1,4 @@
-package com.transportation.letsride.feature.pickupdropoff.widget
+package com.transportation.letsride.feature.pickupdropoff.ui.widget
 
 import android.content.Context
 import android.os.Parcelable

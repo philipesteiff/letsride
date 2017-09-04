@@ -2,19 +2,17 @@ package com.transportation.letsride.feature.pickupdropoff.viewmodel
 
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
-import android.content.Context
 import com.google.android.gms.maps.model.LatLng
-import com.transportation.letsride.common.navigation.Navigator
 import com.transportation.letsride.common.util.plusAssign
 import com.transportation.letsride.common.viewmodel.BaseViewModel
 import com.transportation.letsride.data.executor.SchedulerProvider
 import com.transportation.letsride.data.model.Address
-import com.transportation.letsride.data.repository.Repository
+import com.transportation.letsride.data.repository.AddressRepository
 import timber.log.Timber
 import javax.inject.Inject
 
 class PickupDropOffViewModel @Inject constructor(
-    private val locationRepository: Repository.Location,
+    private val addressRepository: AddressRepository,
     private val schedulers: SchedulerProvider
 ) : BaseViewModel() {
 
@@ -28,11 +26,12 @@ class PickupDropOffViewModel @Inject constructor(
 
   val dropOffAddressChange = MutableLiveData<Address?>()
 
-  val navigateToPickupAddressSearch = MutableLiveData<Address?>()
-  val navigateToDropOffAddressSearch = MutableLiveData<Address?>()
+
+  val navigateToPickupAddressSearch = MutableLiveData<Unit>()
+  val navigateToDropOffAddressSearch = MutableLiveData<Unit>()
 
   private fun findAddress(latLng: LatLng) {
-    disposables += locationRepository
+    disposables += addressRepository
         .getAddressFromLocation(latLng)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
@@ -47,15 +46,15 @@ class PickupDropOffViewModel @Inject constructor(
   }
 
   fun onPickupAddressClicked() {
-    navigateToPickupAddressSearch.value = pickupAddressChange.value
+    navigateToPickupAddressSearch.value = Unit
   }
 
   fun onDropoffAddressClicked() {
-    navigateToDropOffAddressSearch.value = dropOffAddressChange.value
+    navigateToDropOffAddressSearch.value = Unit
   }
 
   fun onReceivePickupAddressResult(address: Address) {
-    pickupAddressChange.value = address
+    pickupAddressChange.value = address.
   }
 
   fun onReveiveDropOffAddressResult(address: Address) {

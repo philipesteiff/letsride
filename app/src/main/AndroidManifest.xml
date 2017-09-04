@@ -27,8 +27,8 @@
       </intent-filter>
     </activity>
 
+    <activity android:name=".feature.search.ui.activity.SearchAddressActivity"/>
     <activity android:name=".feature.LeakActivity"/>
-    <activity android:name=".feature.search.activity.SearchAddressActivity"/>
 
     <meta-data
         android:name="com.google.android.geo.API_KEY"

@@ -6,7 +6,7 @@
     android:background="@color/black"
     android:orientation="vertical">
 
-  <com.transportation.letsride.feature.pickupdropoff.widget.AddressView
+  <com.transportation.letsride.feature.pickupdropoff.ui.widget.AddressView
       android:id="@+id/addressPickupView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
       android:layout_height="1dp"
       android:background="@color/dividerColor"/>
 
-  <com.transportation.letsride.feature.pickupdropoff.widget.AddressView
+  <com.transportation.letsride.feature.pickupdropoff.ui.widget.AddressView
       android:id="@+id/addressDropoffView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
