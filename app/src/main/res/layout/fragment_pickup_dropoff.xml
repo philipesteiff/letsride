@@ -23,7 +23,7 @@
       android:background="@color/dividerColor"/>
 
   <com.transportation.letsride.feature.pickupdropoff.ui.widget.AddressView
-      android:id="@+id/addressDropoffView"
+      android:id="@+id/addressDropOffView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginBottom="8dp"

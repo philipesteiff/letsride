@@ -9,8 +9,7 @@ import javax.inject.Singleton
 @Singleton
 class LetsRideViewModelFactory @Inject constructor(
     val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
-)
-  : ViewModelProvider.Factory {
+) : ViewModelProvider.Factory {
 
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
     var creator: Provider<out ViewModel>? = creators[modelClass]

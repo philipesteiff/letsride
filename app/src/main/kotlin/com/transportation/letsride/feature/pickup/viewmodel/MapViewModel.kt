@@ -1,19 +1,26 @@
 package com.transportation.letsride.feature.pickup.viewmodel
 
 import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
 import com.transportation.letsride.common.extensions.toLatLng
 import com.transportation.letsride.common.util.plusAssign
 import com.transportation.letsride.common.viewmodel.BaseViewModel
-import com.transportation.letsride.data.model.Address
+import com.transportation.letsride.data.executor.SchedulerProvider
 import com.transportation.letsride.data.repository.LocationRepository
+import com.transportation.letsride.feature.pickupdropoff.viewmodel.FilledAddresses
 import io.reactivex.disposables.Disposables
 import timber.log.Timber
 import javax.inject.Inject
 
+sealed class MapCameraPositionAction {
+  class JustMoveMap(val newLocation: LatLng) : MapCameraPositionAction()
+  class MapDragged(val newLocation: LatLng) : MapCameraPositionAction()
+  class AdjustMap(val newLocation: LatLng) : MapCameraPositionAction()
+}
+
 class MapViewModel @Inject constructor(
-    val locationRepository: LocationRepository
+    private val locationRepository: LocationRepository,
+    private val schedulers: SchedulerProvider
 ) : BaseViewModel() {
 
   var initialLocationDisposable = Disposables.empty()
@@ -22,15 +29,9 @@ class MapViewModel @Inject constructor(
   val myLocationEnabled = MediatorLiveData<Boolean>().apply {
     addSource(permissionGranted) { it?.let { enableMyLocation(it) } }
   }
-  //  val pickupAddressChange = MutableLiveData<Address?>()
-  val mapDragged = MutableLiveData<LatLng>()
-  val currentMapCameraPosition = MediatorLiveData<LatLng>().apply {
-    addSource(permissionGranted) { granted -> shouldRetrieveCurrentPosition(granted) }
-    addSource(mapDragged) { value = it }
 
-  }
-  val balh = MediatorLiveData<LatLng>().apply {
-//    addSource(pickupAddressChange) { moveMapToAddress(it) }
+  val mapCameraPosition = MediatorLiveData<MapCameraPositionAction>().apply {
+    addSource(permissionGranted) { granted -> shouldRetrieveCurrentPosition(granted) }
   }
 
   fun enableMyLocation(enabled: Boolean) {
@@ -38,13 +39,7 @@ class MapViewModel @Inject constructor(
   }
 
   fun mapDragged(newPosition: LatLng) {
-    mapDragged.value = newPosition
-  }
-
-  fun pickupAddressChanged(address: Address?) {
-    address?.let { balh.value = address.getLatLng() }
-
-//    pickupAddressChange.postValue(address)
+    mapCameraPosition.value = MapCameraPositionAction.MapDragged(newPosition)
   }
 
   fun moveMapToMyLocation() {
@@ -55,8 +50,14 @@ class MapViewModel @Inject constructor(
     permissionGranted.value = granted
   }
 
-  private fun moveMapToAddress(address: Address?) {
-    address?.let { currentMapCameraPosition.value = it.getLatLng() }
+  fun moveToPickupAddressLocation(location: LatLng?) {
+    location?.let { mapCameraPosition.value = MapCameraPositionAction.AdjustMap(it) }
+  }
+
+  fun pickupDropOffAddressFilled(filledAddresses: FilledAddresses?) {
+    filledAddresses?.let { (pickupAddress, dropOffAddress) ->
+
+    }
   }
 
   private fun shouldRetrieveCurrentPosition(permissionGranted: Boolean?) {
@@ -67,9 +68,11 @@ class MapViewModel @Inject constructor(
 
   private fun retrieveCurrentPosition() {
     initialLocationDisposable = locationRepository.location().take(1)
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
         .subscribe(
             { newLocation ->
-              balh.postValue(newLocation.toLatLng())
+              mapCameraPosition.postValue(MapCameraPositionAction.JustMoveMap(newLocation.toLatLng()))
               initialLocationDisposable.dispose()
             },
             { error -> Timber.e(error) }
