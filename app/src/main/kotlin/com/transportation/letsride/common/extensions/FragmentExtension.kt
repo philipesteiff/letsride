@@ -23,3 +23,14 @@ fun FragmentTransaction.attachFragment(fragment: Fragment, @IdRes content: Int, 
     !fragment.isAdded -> add(content, fragment, tag)
   }
 }
+
+fun FragmentTransaction.detachFragment(manager: FragmentManager, tag: String): Boolean {
+  val fragment = manager.findFragmentByTag(tag)
+  when {
+    fragment != null && fragment.isAdded -> {
+      detach(fragment).commit()
+      return true
+    }
+    else -> return false
+  }
+}

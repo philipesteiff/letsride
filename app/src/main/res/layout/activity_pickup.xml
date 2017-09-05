@@ -39,6 +39,15 @@
       app:layout_constraintTop_toTopOf="parent"/>
   <!-- Marker -->
 
+  <FrameLayout
+      android:id="@+id/pickupDropoffAddressContainer"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_margin="8dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"/>
+
   <android.support.design.widget.FloatingActionButton
       android:id="@+id/buttonPickupMyLocation"
       android:layout_width="wrap_content"
@@ -55,7 +64,7 @@
       app:srcCompat="@drawable/ic_near_me"/>
 
   <FrameLayout
-      android:id="@+id/pickupDropoffAddressContainer"
+      android:id="@+id/categoriesContainer"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginBottom="8dp"

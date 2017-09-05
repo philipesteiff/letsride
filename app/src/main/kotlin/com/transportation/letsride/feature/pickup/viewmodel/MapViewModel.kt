@@ -1,6 +1,7 @@
 package com.transportation.letsride.feature.pickup.viewmodel
 
 import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
 import com.transportation.letsride.common.extensions.toLatLng
 import com.transportation.letsride.common.util.plusAssign
@@ -34,6 +35,8 @@ class MapViewModel @Inject constructor(
     addSource(permissionGranted) { granted -> shouldRetrieveCurrentPosition(granted) }
   }
 
+  val showCategories = MutableLiveData<Boolean>()
+
   fun enableMyLocation(enabled: Boolean) {
     myLocationEnabled.value = enabled
   }
@@ -56,7 +59,7 @@ class MapViewModel @Inject constructor(
 
   fun pickupDropOffAddressFilled(filledAddresses: FilledAddresses?) {
     filledAddresses?.let { (pickupAddress, dropOffAddress) ->
-
+      showCategories.value = true
     }
   }
 

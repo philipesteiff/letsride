@@ -54,12 +54,10 @@ class PickupDropoffFragment : BaseFragment() {
   }
 
   private fun shouldExtractData(resultCode: Int, data: Intent?, resultOk: (Address) -> Unit) {
-    if (resultCode == Activity.RESULT_OK) {
-      data?.getParcelableExtra<Address?>(SearchAddressActivity.EXTRA_ADDRESS)
-          ?.let(resultOk)
-    } else {
+    if (resultCode == Activity.RESULT_OK)
+      data?.getParcelableExtra<Address?>(SearchAddressActivity.EXTRA_ADDRESS)?.let(resultOk)
+    else
       Timber.e("Failed to receive address.")
-    }
   }
 
   private fun listenViews() {

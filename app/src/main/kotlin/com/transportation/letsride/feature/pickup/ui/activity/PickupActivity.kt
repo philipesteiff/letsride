@@ -8,9 +8,11 @@ import com.transportation.letsride.R
 import com.transportation.letsride.common.di.FragmentInjector
 import com.transportation.letsride.common.extensions.attachFragment
 import com.transportation.letsride.common.extensions.commitNowTransactions
+import com.transportation.letsride.common.extensions.detachFragment
 import com.transportation.letsride.common.extensions.findFragment
 import com.transportation.letsride.common.util.observe
 import com.transportation.letsride.common.util.unsafeLazy
+import com.transportation.letsride.feature.categories.ui.fragment.CategoriesFragment
 import com.transportation.letsride.feature.map.fragment.CustomMapFragment
 import com.transportation.letsride.feature.pickup.viewmodel.MapCameraPositionAction
 import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
@@ -25,7 +27,7 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   @Inject
   override lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
 
-  val viewModel: MapViewModel by unsafeLazy({
+  val mapViewModel: MapViewModel by unsafeLazy({
     ViewModelProviders.of(this, viewModelFactory)
         .get(MapViewModel::class.java)
   })
@@ -47,15 +49,15 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   }
 
   override fun mapDragged(newLocation: LatLng) {
-    viewModel.mapDragged(newLocation)
+    mapViewModel.mapDragged(newLocation)
   }
 
   override fun onLocationPermissionGranted() {
-    viewModel.onPermissionGranted(true)
+    mapViewModel.onPermissionGranted(true)
   }
 
   override fun onLocationPermissionDenied() {
-    viewModel.onPermissionGranted(false)
+    mapViewModel.onPermissionGranted(false)
   }
 
   private fun attachViews() {
@@ -66,15 +68,18 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   }
 
   private fun listenViews() {
-    buttonPickupMyLocation.setOnClickListener { viewModel.moveMapToMyLocation() }
+    buttonPickupMyLocation.setOnClickListener { mapViewModel.moveMapToMyLocation() }
   }
 
   private fun listenData() {
-    viewModel.myLocationEnabled
+    mapViewModel.myLocationEnabled
         .observe(this, this::showMyLocationButton)
 
-    viewModel.mapCameraPosition
+    mapViewModel.mapCameraPosition
         .observe(this, this::moveMapToLocation)
+
+    mapViewModel.showCategories
+        .observe(this, this::showCategoriesView)
   }
 
   private fun moveMapToLocation(action: MapCameraPositionAction?) {
@@ -88,6 +93,15 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
     when (enabled) {
       true -> buttonPickupMyLocation.show()
       false -> buttonPickupMyLocation.hide()
+    }
+  }
+
+  private fun showCategoriesView(attach: Boolean?) {
+    supportFragmentManager.commitNowTransactions {
+      when (attach) {
+        true -> it.attachFragment(CategoriesFragment.newInstance(), categoriesContainer.id, CategoriesFragment.TAG)
+        false -> it.detachFragment(supportFragmentManager, CategoriesFragment.TAG)
+      }
     }
   }
 
