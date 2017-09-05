@@ -60,6 +60,7 @@ class MapViewModel @Inject constructor(
   fun pickupDropOffAddressFilled(filledAddresses: FilledAddresses?) {
     filledAddresses?.let { (pickupAddress, dropOffAddress) ->
       showCategories.value = true
+
     }
   }
 
