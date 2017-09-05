@@ -19,26 +19,59 @@ sealed class MapCameraPositionAction {
   class AdjustMap(val newLocation: LatLng) : MapCameraPositionAction()
 }
 
-class MapViewModel @Inject constructor(
+enum class ViewState { INIT, ESTIMATE }
+
+typealias PickupDropOffPinPositions = Pair<LatLng?, LatLng?>
+
+class PickupViewModel @Inject constructor(
     private val locationRepository: LocationRepository,
     private val schedulers: SchedulerProvider
 ) : BaseViewModel() {
 
   var initialLocationDisposable = Disposables.empty()
 
-  val permissionGranted = MediatorLiveData<Boolean>()
-  val myLocationEnabled = MediatorLiveData<Boolean>().apply {
-    addSource(permissionGranted) { it?.let { enableMyLocation(it) } }
+  val viewState = MutableLiveData<ViewState>().apply { value = ViewState.INIT }
+
+  val isPickupMarkerVisible = MediatorLiveData<Boolean>().apply {
+    addSource(viewState) { viewState ->
+      when (viewState) {
+        ViewState.INIT -> value = true
+        ViewState.ESTIMATE -> value = false
+      }
+    }
+  }
+
+  val isEstimatesVisible = MediatorLiveData<Boolean>().apply {
+    addSource(viewState) { viewState ->
+      when (viewState) {
+        ViewState.INIT -> value = false
+        ViewState.ESTIMATE -> value = true
+      }
+    }
+  }
+
+  val enableMapDrag = MediatorLiveData<Boolean>().apply {
+    addSource(viewState) { viewState ->
+      when (viewState) {
+        ViewState.INIT -> value = true
+        ViewState.ESTIMATE -> value = false
+      }
+    }
+  }
+
+  val isPermissionGranted = MediatorLiveData<Boolean>()
+  val isMyLocationEnabled = MediatorLiveData<Boolean>().apply {
+    addSource(isPermissionGranted) { it?.let { enableMyLocation(it) } }
   }
 
   val mapCameraPosition = MediatorLiveData<MapCameraPositionAction>().apply {
-    addSource(permissionGranted) { granted -> shouldRetrieveCurrentPosition(granted) }
+    addSource(isPermissionGranted) { granted -> shouldRetrieveCurrentPosition(granted) }
   }
 
-  val showCategories = MutableLiveData<Boolean>()
+  val pickupDropOffPinPositions = MutableLiveData<PickupDropOffPinPositions>()
 
   fun enableMyLocation(enabled: Boolean) {
-    myLocationEnabled.value = enabled
+    isMyLocationEnabled.value = enabled
   }
 
   fun mapDragged(newPosition: LatLng) {
@@ -50,7 +83,7 @@ class MapViewModel @Inject constructor(
   }
 
   fun onPermissionGranted(granted: Boolean) {
-    permissionGranted.value = granted
+    isPermissionGranted.value = granted
   }
 
   fun moveToPickupAddressLocation(location: LatLng?) {
@@ -59,7 +92,11 @@ class MapViewModel @Inject constructor(
 
   fun pickupDropOffAddressFilled(filledAddresses: FilledAddresses?) {
     filledAddresses?.let { (pickupAddress, dropOffAddress) ->
-      showCategories.value = true
+      viewState.value = ViewState.ESTIMATE
+      pickupDropOffPinPositions.value = PickupDropOffPinPositions(
+          pickupAddress?.getLatLng(),
+          dropOffAddress?.getLatLng()
+      )
 
     }
   }
@@ -81,6 +118,16 @@ class MapViewModel @Inject constructor(
             },
             { error -> Timber.e(error) }
         ).apply { disposables += this }
+  }
+
+  fun onBackPressed(): Boolean {
+    return when (viewState.value) {
+      ViewState.INIT -> true
+      else -> {
+        viewState.value = ViewState.INIT
+        false
+      }
+    }
   }
 
 }

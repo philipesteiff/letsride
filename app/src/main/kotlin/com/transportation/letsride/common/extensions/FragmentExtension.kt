@@ -13,7 +13,7 @@ fun <F : Fragment> FragmentActivity.findFragment(tag: String): F? {
       .also { if (it == null) Timber.e("Fragment $it not found.") }
 }
 
-fun FragmentManager.commitNowTransactions(func: FragmentManager.(FragmentTransaction) -> Unit) {
+fun FragmentManager.commitTransactions(func: FragmentManager.(FragmentTransaction) -> Unit) {
   beginTransaction().apply { func(this) }.commit()
 }
 

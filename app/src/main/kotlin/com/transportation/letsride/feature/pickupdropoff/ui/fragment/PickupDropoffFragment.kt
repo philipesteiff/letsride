@@ -13,7 +13,7 @@ import com.transportation.letsride.common.ui.fragment.BaseFragment
 import com.transportation.letsride.common.util.observe
 import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.data.model.Address
-import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
+import com.transportation.letsride.feature.pickup.viewmodel.PickupViewModel
 import com.transportation.letsride.feature.pickupdropoff.viewmodel.PickupDropOffViewModel
 import com.transportation.letsride.feature.search.ui.activity.SearchAddressActivity
 import kotlinx.android.synthetic.main.fragment_pickup_dropoff.*
@@ -25,9 +25,9 @@ class PickupDropoffFragment : BaseFragment() {
   @Inject
   lateinit var navigator: Navigator
 
-  val mapViewModel: MapViewModel by unsafeLazy {
+  val pickupViewModel: PickupViewModel by unsafeLazy {
     ViewModelProviders.of(activity, viewModelFactory)
-        .get(MapViewModel::class.java)
+        .get(PickupViewModel::class.java)
   }
 
   val viewModel: PickupDropOffViewModel by unsafeLazy {
@@ -66,14 +66,14 @@ class PickupDropoffFragment : BaseFragment() {
   }
 
   private fun listenData() {
-    mapViewModel.mapCameraPosition
+    pickupViewModel.mapCameraPosition
         .observe(this, viewModel::newMapCameraPosition)
 
     viewModel.pickupAddressChange
         .observe(this, this::pickupAddressChanged)
 
     viewModel.adjustMapByPickupAddressLocation
-        .observe(this, mapViewModel::moveToPickupAddressLocation)
+        .observe(this, pickupViewModel::moveToPickupAddressLocation)
 
     viewModel.dropOffAddressChange
         .observe(this, this::dropOffAddressChanged)
@@ -85,7 +85,7 @@ class PickupDropoffFragment : BaseFragment() {
         .observe(this, this::navigateToDropOffAddressSearch)
 
     viewModel.pickupDropOffAddressFilled
-        .observe(this, mapViewModel::pickupDropOffAddressFilled)
+        .observe(this, pickupViewModel::pickupDropOffAddressFilled)
   }
 
   private fun navigateToPickupAddressSearch(unit: Unit?) {

@@ -49,6 +49,7 @@ class CustomMapFragment : SupportMapFragment() {
             it.apply {
               setMapStyle(mapStyle)
 
+
               isIndoorEnabled = false
               uiSettings?.apply {
                 isCompassEnabled = false
@@ -78,6 +79,10 @@ class CustomMapFragment : SupportMapFragment() {
           .build()
       it.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
     }
+  }
+
+  fun setMapDragEnabled(enabled: Boolean) {
+    getMapAsync { it.uiSettings.isScrollGesturesEnabled = enabled }
   }
 
   private fun GoogleMap.onMapDragged(): Observable<LatLng> {
