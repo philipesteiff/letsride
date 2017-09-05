@@ -28,7 +28,7 @@ fun FragmentTransaction.detachFragment(manager: FragmentManager, tag: String): B
   val fragment = manager.findFragmentByTag(tag)
   when {
     fragment != null && fragment.isAdded -> {
-      detach(fragment).commit()
+      detach(fragment)
       return true
     }
     else -> return false
