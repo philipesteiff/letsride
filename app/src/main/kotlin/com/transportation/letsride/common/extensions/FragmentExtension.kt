@@ -10,7 +10,7 @@ import timber.log.Timber
 @Suppress("UNCHECKED_CAST")
 fun <F : Fragment> FragmentActivity.findFragment(tag: String): F? {
   return (supportFragmentManager.findFragmentByTag(tag) as F?)
-      .also { if (it == null) Timber.e("Fragment $it not found.") }
+      .also { if (it == null) Timber.e("Fragment not found. TAG: $tag") }
 }
 
 fun FragmentManager.commitTransactions(func: FragmentManager.(FragmentTransaction) -> Unit) {

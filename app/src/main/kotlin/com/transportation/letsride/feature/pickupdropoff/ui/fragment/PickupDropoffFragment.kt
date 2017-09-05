@@ -13,10 +13,12 @@ import com.transportation.letsride.common.ui.fragment.BaseFragment
 import com.transportation.letsride.common.util.observe
 import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.data.model.Address
+import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
 import com.transportation.letsride.feature.pickup.viewmodel.PickupViewModel
 import com.transportation.letsride.feature.pickupdropoff.viewmodel.PickupDropOffViewModel
 import com.transportation.letsride.feature.search.ui.activity.SearchAddressActivity
-import kotlinx.android.synthetic.main.fragment_pickup_dropoff.*
+import kotlinx.android.synthetic.main.fragment_pickup_dropoff.addressDropOffView
+import kotlinx.android.synthetic.main.fragment_pickup_dropoff.addressPickupView
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -30,7 +32,12 @@ class PickupDropoffFragment : BaseFragment() {
         .get(PickupViewModel::class.java)
   }
 
-  val viewModel: PickupDropOffViewModel by unsafeLazy {
+  val mapViewModel: MapViewModel by unsafeLazy {
+    ViewModelProviders.of(activity, viewModelFactory)
+        .get(MapViewModel::class.java)
+  }
+
+  val pickupDropoffViewModel: PickupDropOffViewModel by unsafeLazy {
     ViewModelProviders.of(this, viewModelFactory)
         .get(PickupDropOffViewModel::class.java)
   }
@@ -48,8 +55,8 @@ class PickupDropoffFragment : BaseFragment() {
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     when (requestCode) {
-      PICKUP_ADDRESS_REQUEST -> shouldExtractData(resultCode, data) { viewModel.onReceivePickupAddressResult(it) }
-      DROPOFF_ADDRESS_REQUEST -> shouldExtractData(resultCode, data) { viewModel.onReceiveDropOffAddressResult(it) }
+      PICKUP_ADDRESS_REQUEST -> shouldExtractData(resultCode, data) { pickupDropoffViewModel.onReceivePickupAddressResult(it) }
+      DROPOFF_ADDRESS_REQUEST -> shouldExtractData(resultCode, data) { pickupDropoffViewModel.onReceiveDropOffAddressResult(it) }
     }
   }
 
@@ -61,31 +68,34 @@ class PickupDropoffFragment : BaseFragment() {
   }
 
   private fun listenViews() {
-    addressPickupView.setOnClickListener { viewModel.onPickupAddressClicked() }
-    addressDropOffView.setOnClickListener { viewModel.onDropoffAddressClicked() }
+    addressPickupView.setOnClickListener { pickupDropoffViewModel.onPickupAddressClicked() }
+    addressDropOffView.setOnClickListener { pickupDropoffViewModel.onDropoffAddressClicked() }
   }
 
   private fun listenData() {
-    pickupViewModel.mapCameraPosition
-        .observe(this, viewModel::newMapCameraPosition)
+    mapViewModel.mapCameraPosition
+        .observe(this, pickupDropoffViewModel::newMapCameraPosition)
 
-    viewModel.pickupAddressChange
+    pickupDropoffViewModel.pickupAddressChange
         .observe(this, this::pickupAddressChanged)
 
-    viewModel.adjustMapByPickupAddressLocation
-        .observe(this, pickupViewModel::moveToPickupAddressLocation)
+    pickupDropoffViewModel.adjustMapByPickupAddressLocation
+        .observe(this, mapViewModel::moveToPickupAddressLocation)
 
-    viewModel.dropOffAddressChange
+    pickupDropoffViewModel.dropOffAddressChange
         .observe(this, this::dropOffAddressChanged)
 
-    viewModel.navigateToPickupAddressSearch
+    pickupDropoffViewModel.navigateToPickupAddressSearch
         .observe(this, this::navigateToPickupAddressSearch)
 
-    viewModel.navigateToDropOffAddressSearch
+    pickupDropoffViewModel.navigateToDropOffAddressSearch
         .observe(this, this::navigateToDropOffAddressSearch)
 
-    viewModel.pickupDropOffAddressFilled
-        .observe(this, pickupViewModel::pickupDropOffAddressFilled)
+    pickupDropoffViewModel.pickupDropOffAddressFilled.let {
+      it.observe(this, mapViewModel::pickupDropOffAddressFilled)
+      it.observe(this, pickupViewModel::pickupDropOffAddressFilled)
+    }
+
   }
 
   private fun navigateToPickupAddressSearch(unit: Unit?) {

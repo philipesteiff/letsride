@@ -16,7 +16,7 @@ import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.feature.categories.ui.fragment.CategoriesFragment
 import com.transportation.letsride.feature.map.fragment.CustomMapFragment
 import com.transportation.letsride.feature.pickup.viewmodel.MapCameraPositionAction
-import com.transportation.letsride.feature.pickup.viewmodel.PickupDropOffPinPositions
+import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
 import com.transportation.letsride.feature.pickup.viewmodel.PickupViewModel
 import com.transportation.letsride.feature.pickupdropoff.ui.fragment.PickupDropoffFragment
 import dagger.android.DispatchingAndroidInjector
@@ -26,13 +26,17 @@ import kotlinx.android.synthetic.main.activity_pickup.imagePickupMapMarker
 import kotlinx.android.synthetic.main.activity_pickup.pickupDropoffAddressContainer
 import kotlinx.android.synthetic.main.activity_pickup.pickupMapContainer
 import kotlinx.android.synthetic.main.activity_pickup.viewPickupCenterPoint
-import timber.log.Timber
 import javax.inject.Inject
 
 class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomMapFragment.MapListener {
 
   @Inject
   override lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
+
+  val mapViewModel: MapViewModel by unsafeLazy({
+    ViewModelProviders.of(this, viewModelFactory)
+        .get(MapViewModel::class.java)
+  })
 
   val pickupViewModel: PickupViewModel by unsafeLazy({
     ViewModelProviders.of(this, viewModelFactory)
@@ -45,7 +49,6 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   val pickupMarker by lazy { listOf(imagePickupMapMarker, viewPickupCenterPoint) }
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    Timber.d("onCreate")
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_pickup)
 
@@ -63,15 +66,15 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   }
 
   override fun mapDragged(newLocation: LatLng) {
-    pickupViewModel.mapDragged(newLocation)
+    mapViewModel.mapDragged(newLocation)
   }
 
   override fun onLocationPermissionGranted() {
-    pickupViewModel.onPermissionGranted(true)
+    mapViewModel.onPermissionGranted(true)
   }
 
   override fun onLocationPermissionDenied() {
-    pickupViewModel.onPermissionGranted(false)
+    mapViewModel.onPermissionGranted(false)
   }
 
   private fun attachViews() {
@@ -82,27 +85,29 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   }
 
   private fun listenViews() {
-    buttonPickupMyLocation.setOnClickListener { pickupViewModel.moveMapToMyLocation() }
+    buttonPickupMyLocation.setOnClickListener { mapViewModel.moveMapToMyLocation() }
   }
 
   private fun listenData() {
-    pickupViewModel.isMyLocationEnabled
+
+    pickupViewModel.viewState
+        .observe(this, mapViewModel::stateChanged)
+
+    mapViewModel.isMyLocationEnabled
         .observe(this, this::showMyLocationButton)
 
-    pickupViewModel.mapCameraPosition
+    mapViewModel.mapCameraPosition
         .observe(this, this::moveMapToLocation)
 
-    pickupViewModel.isPickupMarkerVisible
+    mapViewModel.isPickupMarkerVisible
         .observe(this, this::showPickupMarker)
 
-    pickupViewModel.enableMapDrag
+    mapViewModel.enableMapDrag
         .observe(this, this::enableMapDrag)
 
     pickupViewModel.isEstimatesVisible
         .observe(this, this::showEstimates)
 
-//    pickupViewModel.pickupDropOffPinPositions
-//        .observe(this, this::showPickupDropOffPinPositions)
   }
 
   private fun moveMapToLocation(action: MapCameraPositionAction?) {
@@ -141,10 +146,5 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
       }
     }
   }
-
-  private fun showPickupDropOffPinPositions(pickupDropOffPinPositions: PickupDropOffPinPositions) {
-
-  }
-
 
 }
