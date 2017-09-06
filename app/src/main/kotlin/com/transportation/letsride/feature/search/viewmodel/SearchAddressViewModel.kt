@@ -6,24 +6,21 @@ import com.transportation.letsride.common.util.plusAssign
 import com.transportation.letsride.common.viewmodel.BaseViewModel
 import com.transportation.letsride.data.executor.SchedulerProvider
 import com.transportation.letsride.data.model.PinPoint
-import com.transportation.letsride.data.model.AutoCompleteOptions
-import com.transportation.letsride.data.model.Prediction
 import com.transportation.letsride.data.repository.AddressRepository
 import timber.log.Timber
 import javax.inject.Inject
 
 class SearchAddressViewModel @Inject constructor(
     private val schedulers: SchedulerProvider,
-    private val autoCompleteOptions: AutoCompleteOptions,
     private val addressRepository: AddressRepository
 ) : BaseViewModel() {
 
   val inputAddress = MutableLiveData<String>()
-  val searchResults = MediatorLiveData<List<Prediction>>().apply {
+  val searchResults = MediatorLiveData<List<PinPoint>>().apply {
     addSource(inputAddress) { query(it) }
   }
 
-  val selectedPrediction = MutableLiveData<Prediction>()
+  val selectedPrediction = MutableLiveData<PinPoint>()
   val selectedAddress = MediatorLiveData<PinPoint?>().apply {
     addSource(selectedPrediction) { retrieveAddress(it) }
   }
@@ -33,12 +30,12 @@ class SearchAddressViewModel @Inject constructor(
       inputAddress.value = input
   }
 
-  fun onPredictionSelected(prediction: Prediction) {
+  fun onPredictionSelected(prediction: PinPoint) {
     selectedPrediction.value = prediction
   }
 
   private fun query(inputAddress: String?) {
-    disposables += addressRepository.query(inputAddress.orEmpty(), autoCompleteOptions)
+    disposables += addressRepository.query(inputAddress.orEmpty())
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
         .subscribe(
@@ -47,14 +44,8 @@ class SearchAddressViewModel @Inject constructor(
         )
   }
 
-  private fun retrieveAddress(prediction: Prediction?) {
-    prediction?.let {
-      disposables += addressRepository.reverseGeocode(it.placeId)
-          .subscribe(
-              { address -> selectedAddress.value = address },
-              { error -> Timber.e(error) }
-          )
-    }
+  private fun retrieveAddress(prediction: PinPoint?) {
+    prediction?.let { selectedAddress.value = prediction }
   }
 
 }

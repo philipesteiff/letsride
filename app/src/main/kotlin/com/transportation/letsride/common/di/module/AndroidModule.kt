@@ -2,6 +2,7 @@ package com.transportation.letsride.common.di.module
 
 import android.app.Application
 import android.content.Context
+import android.location.Geocoder
 import android.os.Build
 import com.transportation.letsride.App
 import com.transportation.letsride.data.executor.ApplicationSchedulers
@@ -32,6 +33,12 @@ class AndroidModule {
         resources.configuration.locale
       }
     }
+  }
+
+  @Provides
+  @Singleton
+  fun providesGeocoder(context: Context, locale: Locale): Geocoder {
+    return Geocoder(context, locale)
   }
 
   @Provides

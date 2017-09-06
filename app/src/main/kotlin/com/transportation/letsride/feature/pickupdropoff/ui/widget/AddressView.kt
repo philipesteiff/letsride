@@ -29,7 +29,7 @@ class AddressView @JvmOverloads constructor(
 
   fun applyAddress(pinPoint: PinPoint?) {
     pinPoint?.apply {
-      setAddressText(name)
+      setAddressText(address)
     } ?: setAddressNotFound()
   }
 

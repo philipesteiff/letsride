@@ -1,78 +1,37 @@
 package com.transportation.letsride.data.source
 
+import android.location.Address
+import android.location.Geocoder
 import com.google.android.gms.maps.model.LatLng
-import com.transportation.letsride.common.extensions.formatWithComma
-import com.transportation.letsride.common.extensions.toStringWithCommas
-import com.transportation.letsride.data.api.GoogleMapsApi
-import com.transportation.letsride.data.executor.SchedulerProvider
-import com.transportation.letsride.data.model.*
-import io.reactivex.Observable
-import io.reactivex.Single
+import com.transportation.letsride.data.model.PinPoint
+import io.reactivex.Maybe
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AddressDataSource @Inject constructor(
-    val schedulers: SchedulerProvider,
-    val googleMapsApi: GoogleMapsApi
+    val geocoder: Geocoder
 ) {
 
-  fun findAddressByLocation(latLng: LatLng): Single<PinPoint?> {
-    return findAddressesByLocation(latLng)
-        .map(this::fromAddressResult)
+  fun findAddressByLocation(latLng: LatLng, maxResults: Int = DEFAULT_MAX_RESULTS): Maybe<PinPoint> {
+    return findAddresses(latLng, maxResults)
+        .map { addresses -> addresses.firstOrNull() }
   }
 
-  fun findAddressesByLocation(latLng: LatLng): Single<List<PinPoint>> {
-    return googleMapsApi
-        .getReverseGeocode(latLng = latLng.toStringWithCommas())
-        .flatMapObservable(handleGoogleApiResponse())
-        .map(mapToAddress())
-        .singleOrError()
+  fun findAddresses(input: String, maxResults: Int = DEFAULT_MAX_RESULTS): Maybe<List<PinPoint>> {
+    return Maybe.fromCallable { geocoder.getFromLocationName(input, maxResults) }
+        .map(toPinPoints())
   }
 
-  fun reverseGeocode(placeId: String): Single<PinPoint> {
-    return googleMapsApi
-        .getReverseGeocode(placeId = placeId)
-        .flatMapObservable(handleGoogleApiResponse())
-        .flatMapIterable { it }
-        .take(1)
-        .map { it.toPinPoint() }
-        .singleOrError()
-
+  fun findAddresses(latLng: LatLng, maxResults: Int = DEFAULT_MAX_RESULTS): Maybe<List<PinPoint>> {
+    return Maybe.fromCallable { geocoder.getFromLocation(latLng.latitude, latLng.longitude, maxResults) }
+        .map(toPinPoints())
   }
 
-  private fun handleGoogleApiResponse(): (GeocodeResponse) -> Observable<List<GeocodeResult>> {
-    return { (status, result) ->
-      when (status) {
-        GoogleMapsResponseStatus.OK -> Observable.just(result)
-        GoogleMapsResponseStatus.ZERO_RESULTS -> Observable.empty()
-        else -> Observable.error(Exception("Something went wrong. Status: $status"))
-      }
-    }
-  }
+  private fun toPinPoints() = { addresses: List<Address> -> addresses.map { PinPoint(it) } }
 
-  private fun fromAddressResult(pinPoints: List<PinPoint>): PinPoint? {
-    return pinPoints.firstOrNull()
-  }
-
-  private fun mapToAddress(): (List<GeocodeResult>) -> List<PinPoint> {
-    return { results -> results.map { it.toPinPoint() } }
-  }
-
-  fun query(input: String, options: AutoCompleteOptions): Single<List<Prediction>> {
-    return googleMapsApi.getPlaceAutocomplete(
-        input = input,
-        location = options.location?.formatWithComma(),
-        radius = options.radius,
-        language = options.language)
-        .flatMap { (status, predictions) ->
-          when (status) {
-            GoogleMapsResponseStatus.OK -> Single.fromCallable { predictions }
-            else -> Single.error(Exception("Something went wrong. Status: $status"))
-          }
-        }
-        .observeOn(schedulers.ui())
-        .subscribeOn(schedulers.io())
+  companion object {
+    const val DEFAULT_MAX_RESULTS = 10
   }
 
 }

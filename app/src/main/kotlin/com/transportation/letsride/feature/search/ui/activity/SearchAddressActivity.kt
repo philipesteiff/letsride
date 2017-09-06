@@ -10,7 +10,6 @@ import com.transportation.letsride.common.util.observe
 import com.transportation.letsride.common.util.plusAssign
 import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.data.model.PinPoint
-import com.transportation.letsride.data.model.Prediction
 import com.transportation.letsride.feature.search.ui.adapter.SearchAddressAdapter
 import com.transportation.letsride.feature.search.ui.widget.TextViewTextObservable
 import com.transportation.letsride.feature.search.viewmodel.SearchAddressViewModel
@@ -33,7 +32,7 @@ class SearchAddressActivity : BaseActivity() {
 
   val adapter by unsafeLazy {
     SearchAddressAdapter().apply {
-      onClick = { viewModel.onPredictionSelected(it as Prediction) }
+      onClick = { viewModel.onPredictionSelected(it as PinPoint) }
     }
   }
 
@@ -67,7 +66,7 @@ class SearchAddressActivity : BaseActivity() {
     )
   }
 
-  private fun onReceiveSearchResults(results: List<Prediction>?) {
+  private fun onReceiveSearchResults(results: List<PinPoint>?) {
     adapter.clear()
     adapter.addAll(results.orEmpty())
   }
