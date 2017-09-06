@@ -17,12 +17,12 @@ class AddressDataSource @Inject constructor(
     val googleMapsApi: GoogleMapsApi
 ) {
 
-  fun findAddressByLocation(latLng: LatLng): Single<Address?> {
+  fun findAddressByLocation(latLng: LatLng): Single<PinPoint?> {
     return findAddressesByLocation(latLng)
         .map(this::fromAddressResult)
   }
 
-  fun findAddressesByLocation(latLng: LatLng): Single<List<Address>> {
+  fun findAddressesByLocation(latLng: LatLng): Single<List<PinPoint>> {
     return googleMapsApi
         .getReverseGeocode(latLng = latLng.toStringWithCommas())
         .flatMapObservable(handleGoogleApiResponse())
@@ -30,13 +30,13 @@ class AddressDataSource @Inject constructor(
         .singleOrError()
   }
 
-  fun reverseGeocode(placeId: String): Single<Address> {
+  fun reverseGeocode(placeId: String): Single<PinPoint> {
     return googleMapsApi
         .getReverseGeocode(placeId = placeId)
         .flatMapObservable(handleGoogleApiResponse())
         .flatMapIterable { it }
         .take(1)
-        .map { it.toAddress() }
+        .map { it.toPinPoint() }
         .singleOrError()
 
   }
@@ -51,12 +51,12 @@ class AddressDataSource @Inject constructor(
     }
   }
 
-  private fun fromAddressResult(addresses: List<Address>): Address? {
-    return addresses.firstOrNull()
+  private fun fromAddressResult(pinPoints: List<PinPoint>): PinPoint? {
+    return pinPoints.firstOrNull()
   }
 
-  private fun mapToAddress(): (List<GeocodeResult>) -> List<Address> {
-    return { results -> results.map { it.toAddress() } }
+  private fun mapToAddress(): (List<GeocodeResult>) -> List<PinPoint> {
+    return { results -> results.map { it.toPinPoint() } }
   }
 
   fun query(input: String, options: AutoCompleteOptions): Single<List<Prediction>> {

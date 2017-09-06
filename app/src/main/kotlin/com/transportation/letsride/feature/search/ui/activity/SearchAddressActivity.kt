@@ -9,7 +9,7 @@ import com.transportation.letsride.common.ui.activity.BaseActivity
 import com.transportation.letsride.common.util.observe
 import com.transportation.letsride.common.util.plusAssign
 import com.transportation.letsride.common.util.unsafeLazy
-import com.transportation.letsride.data.model.Address
+import com.transportation.letsride.data.model.PinPoint
 import com.transportation.letsride.data.model.Prediction
 import com.transportation.letsride.feature.search.ui.adapter.SearchAddressAdapter
 import com.transportation.letsride.feature.search.ui.widget.TextViewTextObservable
@@ -72,10 +72,10 @@ class SearchAddressActivity : BaseActivity() {
     adapter.addAll(results.orEmpty())
   }
 
-  private fun onAddressSelected(address: Address?) {
-    if (address != null)
-      finishWith(address)
-    else Timber.e("Selected address was null")
+  private fun onAddressSelected(pinPoint: PinPoint?) {
+    if (pinPoint != null)
+      finishWith(pinPoint)
+    else Timber.e("Selected pinPoint was null")
   }
 
   fun addressChanges(): Observable<String> {
@@ -88,9 +88,9 @@ class SearchAddressActivity : BaseActivity() {
   }
 
 
-  private fun finishWith(address: Address) {
+  private fun finishWith(pinPoint: PinPoint) {
     val intent = Intent()
-        .putExtra(EXTRA_ADDRESS, address)
+        .putExtra(EXTRA_ADDRESS, pinPoint)
     setResult(RESULT_OK, intent).also { finish() }
   }
 

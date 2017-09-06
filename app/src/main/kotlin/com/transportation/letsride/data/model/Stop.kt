@@ -8,6 +8,5 @@ data class Stop(
     @SerializedName("addr") val address: String,
     @SerializedName("num") val number: String,
     @SerializedName("city") val city: String,
-    @SerializedName("country") val country: String,
-    @SerializedName("instr") val instr: String
+    @SerializedName("country") val country: String
 )

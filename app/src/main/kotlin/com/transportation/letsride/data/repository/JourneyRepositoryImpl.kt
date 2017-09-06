@@ -1,22 +1,16 @@
 package com.transportation.letsride.data.repository
 
-import com.transportation.letsride.data.api.JourneyApi
-import com.transportation.letsride.data.model.Estimates
-import com.transportation.letsride.data.model.JourneyEstimate
+import com.transportation.letsride.data.model.PinPoint
+import com.transportation.letsride.data.model.Estimate
+import com.transportation.letsride.data.source.EstimatesDataSource
 import io.reactivex.Single
 
 class JourneyRepositoryImpl(
-    val journeyApi: JourneyApi
+    val estimatesDataSource: EstimatesDataSource
 ) : JourneyRepository {
 
-  override fun estimates(journeyEstimate: JourneyEstimate): Single<Estimates> {
-    return journeyApi.estimate(journeyEstimate)
-        .flatMap { response ->
-          when {
-            response.isSuccessful -> Single.fromCallable { response.body() }
-            else -> Single.error(Exception(""))
-          }
-        }
+  override fun estimates(pickupPinPoint: PinPoint?, dropOffPinPoint: PinPoint?): Single<List<Estimate>> {
+    return estimatesDataSource.estimates(pickupPinPoint, dropOffPinPoint)
   }
 
 }

@@ -1,8 +1,8 @@
 package com.transportation.letsride.common.di.module
 
-import com.transportation.letsride.data.api.JourneyApi
 import com.transportation.letsride.data.repository.*
 import com.transportation.letsride.data.source.AddressDataSource
+import com.transportation.letsride.data.source.EstimatesDataSource
 import com.transportation.letsride.data.source.LocationDataSource
 import dagger.Module
 import dagger.Provides
@@ -24,9 +24,9 @@ class RepositoryModule {
   @Provides
   @Singleton
   fun providesJourneyRepository(
-      journeyApi: JourneyApi
+      estimatesDataSource: EstimatesDataSource
   ): JourneyRepository {
-    return JourneyRepositoryImpl(journeyApi)
+    return JourneyRepositoryImpl(estimatesDataSource)
   }
 
   @Provides

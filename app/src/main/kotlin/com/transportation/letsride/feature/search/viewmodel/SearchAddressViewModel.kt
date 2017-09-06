@@ -5,9 +5,8 @@ import android.arch.lifecycle.MutableLiveData
 import com.transportation.letsride.common.util.plusAssign
 import com.transportation.letsride.common.viewmodel.BaseViewModel
 import com.transportation.letsride.data.executor.SchedulerProvider
-import com.transportation.letsride.data.model.Address
+import com.transportation.letsride.data.model.PinPoint
 import com.transportation.letsride.data.model.AutoCompleteOptions
-import com.transportation.letsride.data.model.AutoCompleteSuggestion
 import com.transportation.letsride.data.model.Prediction
 import com.transportation.letsride.data.repository.AddressRepository
 import timber.log.Timber
@@ -25,7 +24,7 @@ class SearchAddressViewModel @Inject constructor(
   }
 
   val selectedPrediction = MutableLiveData<Prediction>()
-  val selectedAddress = MediatorLiveData<Address?>().apply {
+  val selectedAddress = MediatorLiveData<PinPoint?>().apply {
     addSource(selectedPrediction) { retrieveAddress(it) }
   }
 

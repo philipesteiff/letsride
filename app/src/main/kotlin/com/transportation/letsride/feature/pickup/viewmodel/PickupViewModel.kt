@@ -15,7 +15,6 @@ class PickupViewModel @Inject constructor() : BaseViewModel() {
 
   val isEstimatesVisible = MediatorLiveData<Boolean>().apply {
     addSource(viewState) { viewState ->
-      Timber.d("viewState: $viewState")
       when (viewState) {
         ViewState.INIT -> value = false
         ViewState.ESTIMATE -> value = true
@@ -23,9 +22,12 @@ class PickupViewModel @Inject constructor() : BaseViewModel() {
     }
   }
 
+  val estimates = MutableLiveData<FilledAddresses>()
+
   fun pickupDropOffAddressFilled(filledAddresses: FilledAddresses?) {
-    filledAddresses?.let { (pickupAddress, dropOffAddress) ->
+    filledAddresses?.let { addresses ->
       viewState.value = ViewState.ESTIMATE
+      estimates.value = addresses
     }
   }
 

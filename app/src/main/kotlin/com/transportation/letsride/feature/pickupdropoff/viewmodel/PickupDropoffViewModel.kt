@@ -6,21 +6,21 @@ import com.google.android.gms.maps.model.LatLng
 import com.transportation.letsride.common.util.plusAssign
 import com.transportation.letsride.common.viewmodel.BaseViewModel
 import com.transportation.letsride.data.executor.SchedulerProvider
-import com.transportation.letsride.data.model.Address
+import com.transportation.letsride.data.model.PinPoint
 import com.transportation.letsride.data.repository.AddressRepository
 import com.transportation.letsride.feature.pickup.viewmodel.MapCameraPositionAction
 import timber.log.Timber
 import javax.inject.Inject
 
-typealias FilledAddresses = Pair<Address?, Address?>
+typealias FilledAddresses = Pair<PinPoint?, PinPoint?>
 
 class PickupDropOffViewModel @Inject constructor(
     private val addressRepository: AddressRepository,
     private val schedulers: SchedulerProvider
 ) : BaseViewModel() {
 
-  val pickupAddressChange = MutableLiveData<Address?>()
-  val dropOffAddressChange = MutableLiveData<Address?>()
+  val pickupAddressChange = MutableLiveData<PinPoint?>()
+  val dropOffAddressChange = MutableLiveData<PinPoint?>()
 
   val adjustMapByPickupAddressLocation = MediatorLiveData<LatLng>().apply {
     addSource(pickupAddressChange) { address -> value = address?.getLatLng() }
@@ -50,12 +50,12 @@ class PickupDropOffViewModel @Inject constructor(
     navigateToDropOffAddressSearch.value = Unit
   }
 
-  fun onReceivePickupAddressResult(address: Address) {
-    pickupAddressChange.value = address
+  fun onReceivePickupAddressResult(pinPoint: PinPoint) {
+    pickupAddressChange.value = pinPoint
   }
 
-  fun onReceiveDropOffAddressResult(address: Address) {
-    dropOffAddressChange.value = address
+  fun onReceiveDropOffAddressResult(pinPoint: PinPoint) {
+    dropOffAddressChange.value = pinPoint
   }
 
   private fun findAddress(latLng: LatLng) {

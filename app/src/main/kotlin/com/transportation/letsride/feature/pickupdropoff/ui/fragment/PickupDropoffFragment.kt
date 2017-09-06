@@ -12,7 +12,7 @@ import com.transportation.letsride.common.navigation.Navigator
 import com.transportation.letsride.common.ui.fragment.BaseFragment
 import com.transportation.letsride.common.util.observe
 import com.transportation.letsride.common.util.unsafeLazy
-import com.transportation.letsride.data.model.Address
+import com.transportation.letsride.data.model.PinPoint
 import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
 import com.transportation.letsride.feature.pickup.viewmodel.PickupViewModel
 import com.transportation.letsride.feature.pickupdropoff.viewmodel.PickupDropOffViewModel
@@ -60,9 +60,9 @@ class PickupDropoffFragment : BaseFragment() {
     }
   }
 
-  private fun shouldExtractData(resultCode: Int, data: Intent?, resultOk: (Address) -> Unit) {
+  private fun shouldExtractData(resultCode: Int, data: Intent?, resultOk: (PinPoint) -> Unit) {
     if (resultCode == Activity.RESULT_OK)
-      data?.getParcelableExtra<Address?>(SearchAddressActivity.EXTRA_ADDRESS)?.let(resultOk)
+      data?.getParcelableExtra<PinPoint?>(SearchAddressActivity.EXTRA_ADDRESS)?.let(resultOk)
     else
       Timber.e("Failed to receive address.")
   }
@@ -106,12 +106,12 @@ class PickupDropoffFragment : BaseFragment() {
     navigator.navigateToAddressSearch(this, DROPOFF_ADDRESS_REQUEST)
   }
 
-  private fun pickupAddressChanged(address: Address?) {
-    addressPickupView.applyAddress(address)
+  private fun pickupAddressChanged(pinPoint: PinPoint?) {
+    addressPickupView.applyAddress(pinPoint)
   }
 
-  private fun dropOffAddressChanged(address: Address?) {
-    addressDropOffView.applyAddress(address)
+  private fun dropOffAddressChanged(pinPoint: PinPoint?) {
+    addressDropOffView.applyAddress(pinPoint)
   }
 
   companion object {

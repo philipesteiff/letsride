@@ -25,9 +25,10 @@ data class GeocodeResult(
     return filtered.first().longName
   }
 
-  fun toAddress(): Address {
-    return Address(
+  fun toPinPoint(): PinPoint {
+    return PinPoint(
         name = formattedAddress,
+        address = getStreetName(),
         country = getCountry(),
         city = getCity(),
         latitude = geometry.location.lat,

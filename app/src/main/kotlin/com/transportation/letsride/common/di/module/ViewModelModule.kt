@@ -2,6 +2,7 @@ package com.transportation.letsride.common.di.module
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
+import com.transportation.letsride.feature.categories.viewmodel.CategoriesViewModel
 import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
 import com.transportation.letsride.feature.pickup.viewmodel.PickupViewModel
 import com.transportation.letsride.feature.pickupdropoff.viewmodel.PickupDropOffViewModel
@@ -32,6 +33,11 @@ abstract class ViewModelModule {
   @IntoMap
   @ViewModelKey(SearchAddressViewModel::class)
   abstract fun bindSearchAddressViewModel(searchAddressViewModel: SearchAddressViewModel): ViewModel
+
+  @Binds
+  @IntoMap
+  @ViewModelKey(CategoriesViewModel::class)
+  abstract fun bindCategoriesViewModel(categoriesViewModel: CategoriesViewModel): ViewModel
 
   @Binds
   abstract fun bindViewModelFactory(factory: LetsRideViewModelFactory): ViewModelProvider.Factory

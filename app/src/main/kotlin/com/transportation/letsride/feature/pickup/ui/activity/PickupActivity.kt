@@ -3,13 +3,13 @@ package com.transportation.letsride.feature.pickup.ui.activity
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import com.google.android.gms.maps.model.LatLng
 import com.transportation.letsride.R
 import com.transportation.letsride.common.di.FragmentInjector
 import com.transportation.letsride.common.extensions.attachFragment
 import com.transportation.letsride.common.extensions.commitTransactions
-import com.transportation.letsride.common.extensions.detachFragment
 import com.transportation.letsride.common.extensions.findFragment
 import com.transportation.letsride.common.util.observe
 import com.transportation.letsride.common.util.unsafeLazy
@@ -19,13 +19,9 @@ import com.transportation.letsride.feature.pickup.viewmodel.MapCameraPositionAct
 import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
 import com.transportation.letsride.feature.pickup.viewmodel.PickupViewModel
 import com.transportation.letsride.feature.pickupdropoff.ui.fragment.PickupDropoffFragment
+import com.transportation.letsride.feature.pickupdropoff.viewmodel.FilledAddresses
 import dagger.android.DispatchingAndroidInjector
-import kotlinx.android.synthetic.main.activity_pickup.buttonPickupMyLocation
-import kotlinx.android.synthetic.main.activity_pickup.categoriesContainer
-import kotlinx.android.synthetic.main.activity_pickup.imagePickupMapMarker
-import kotlinx.android.synthetic.main.activity_pickup.pickupDropoffAddressContainer
-import kotlinx.android.synthetic.main.activity_pickup.pickupMapContainer
-import kotlinx.android.synthetic.main.activity_pickup.viewPickupCenterPoint
+import kotlinx.android.synthetic.main.activity_pickup.*
 import javax.inject.Inject
 
 class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomMapFragment.MapListener {
@@ -45,6 +41,9 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
 
   var mapFragment: CustomMapFragment? = null
     get() = findFragment(CustomMapFragment.TAG)
+
+  var categoriesFragment: CategoriesFragment? = null
+    get() = findFragment(CategoriesFragment.TAG)
 
   val pickupMarker by lazy { listOf(imagePickupMapMarker, viewPickupCenterPoint) }
 
@@ -81,6 +80,7 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
     supportFragmentManager.commitTransactions {
       it.attachFragment(CustomMapFragment.newInstance(), pickupMapContainer.id, CustomMapFragment.TAG)
       it.attachFragment(PickupDropoffFragment.newInstance(), pickupDropoffAddressContainer.id, PickupDropoffFragment.TAG)
+      it.attachFragment(CategoriesFragment.newInstance(), categoriesContainer.id, CategoriesFragment.TAG)
     }
   }
 
@@ -108,6 +108,9 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
     pickupViewModel.isEstimatesVisible
         .observe(this, this::showEstimates)
 
+    pickupViewModel.estimates
+        .observe(this, this::loadEstimates)
+
   }
 
   private fun moveMapToLocation(action: MapCameraPositionAction?) {
@@ -126,8 +129,8 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
 
   private fun showPickupMarker(enabled: Boolean?) {
     when (enabled) {
-      true -> pickupMarker.forEach { it.visibility = View.VISIBLE }
-      false -> pickupMarker.forEach { it.visibility = View.GONE }
+      true -> pickupMarker.forEach { it.visibility = VISIBLE }
+      false -> pickupMarker.forEach { it.visibility = GONE }
     }
   }
 
@@ -138,13 +141,14 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   private fun showEstimates(enabled: Boolean?) {
     supportFragmentManager.commitTransactions {
       when (enabled) {
-        true -> {
-          val fragment = findFragment(CategoriesFragment.TAG) ?: CategoriesFragment.newInstance()
-          it.attachFragment(fragment, categoriesContainer.id, CategoriesFragment.TAG)
-        }
-        false -> it.detachFragment(supportFragmentManager, CategoriesFragment.TAG)
+        true -> categoriesContainer.visibility = VISIBLE
+        false -> categoriesContainer.visibility = GONE
       }
     }
+  }
+
+  private fun loadEstimates(filledAddresses: FilledAddresses?) {
+    categoriesFragment?.loadCategoriesWith(filledAddresses)
   }
 
 }
