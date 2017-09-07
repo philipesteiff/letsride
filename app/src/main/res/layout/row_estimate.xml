@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+  <ImageView
+      android:id="@+id/imgEstimateRowIcon"
+      android:layout_width="wrap_content"
+      android:layout_gravity="center"
+      android:contentDescription="Sample"
+      app:srcCompat="@drawable/ic_estimates_placeholder"
+      android:layout_height="wrap_content"/>
+
+  <TextView
+      android:id="@+id/textEstimateRowName"
+      android:layout_gravity="center"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      tools:text="Shared"/>
+
+  <TextView
+      android:id="@+id/textEstimateRowEta"
+      android:layout_gravity="center"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      tools:text="2-4 min"/>
+
+</LinearLayout>

@@ -6,12 +6,12 @@
     android:padding="16dp">
 
   <TextView
-      android:id="@+id/placeRowName"
+      android:id="@+id/textPlaceRowName"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"/>
 
   <TextView
-      android:id="@+id/placeRowDescription"
+      android:id="@+id/textPlaceRowDescription"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"/>
 

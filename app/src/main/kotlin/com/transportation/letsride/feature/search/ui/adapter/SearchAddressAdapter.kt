@@ -30,8 +30,8 @@ class SearchAddressAdapter(
 
     override fun bind(element: AutoCompleteSuggestion) {
       itemView.apply {
-        placeRowName.text = element.getTitle()
-        placeRowDescription.text = element.getSubtitle()
+        textPlaceRowName.text = element.getTitle()
+        textPlaceRowDescription.text = element.getSubtitle()
         setOnClickListener { onClick(element) }
       }
     }

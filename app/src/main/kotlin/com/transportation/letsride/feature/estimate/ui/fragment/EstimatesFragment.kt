@@ -2,6 +2,7 @@ package com.transportation.letsride.feature.estimate.ui.fragment
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,7 @@ class EstimatesFragment : BaseFragment() {
         .get(EstimatesViewModel::class.java)
   })
 
-  val adapter by unsafeLazy { EstimatesAdapter() }
+  val estimatesAdapter by unsafeLazy { EstimatesAdapter(context) }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     return inflater.inflate(R.layout.fragment_estimates, container, false)
@@ -30,9 +31,12 @@ class EstimatesFragment : BaseFragment() {
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    recyclerEstimates.adapter = adapter
+    recyclerEstimates.apply {
+      this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+      this.adapter = estimatesAdapter
+    }
+
     listenData()
-//    listenViews()
   }
 
   private fun listenData() {
@@ -45,8 +49,8 @@ class EstimatesFragment : BaseFragment() {
   }
 
   fun onReceiveEstimates(estimates: List<Estimate>?) {
-    adapter.clear()
-    adapter.addAll(estimates.orEmpty())
+    estimatesAdapter.clear()
+    estimatesAdapter.addAll(estimates.orEmpty())
   }
 
   companion object {

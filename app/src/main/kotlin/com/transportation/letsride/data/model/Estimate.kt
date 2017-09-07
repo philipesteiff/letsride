@@ -7,6 +7,5 @@ data class Estimate(
     @SerializedName("total_price") val totalPrice: Int,
     @SerializedName("price_formatted") val formattedPrice: String,
     @SerializedName("currency") val currency: String,
-    @SerializedName("currency_symbol") val currencySymbol: String,
-    @SerializedName("eta") val eta: Eta
+    @SerializedName("currency_symbol") val currencySymbol: String
 )
