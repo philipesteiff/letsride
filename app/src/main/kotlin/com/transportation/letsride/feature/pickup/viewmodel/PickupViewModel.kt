@@ -4,7 +4,6 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import com.transportation.letsride.common.viewmodel.BaseViewModel
 import com.transportation.letsride.feature.pickupdropoff.viewmodel.FilledAddresses
-import timber.log.Timber
 import javax.inject.Inject
 
 enum class ViewState { INIT, ESTIMATE }

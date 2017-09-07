@@ -1,6 +1,11 @@
 package com.transportation.letsride.common.di.module
 
-import com.transportation.letsride.data.repository.*
+import com.transportation.letsride.data.repository.AddressRepository
+import com.transportation.letsride.data.repository.AddressRepositoryImpl
+import com.transportation.letsride.data.repository.JourneyRepository
+import com.transportation.letsride.data.repository.JourneyRepositoryImpl
+import com.transportation.letsride.data.repository.LocationRepository
+import com.transportation.letsride.data.repository.LocationRepositoryImpl
 import com.transportation.letsride.data.source.AddressDataSource
 import com.transportation.letsride.data.source.EstimatesDataSource
 import com.transportation.letsride.data.source.LocationDataSource

@@ -1,6 +1,10 @@
 package com.transportation.letsride.common.util
 
-import android.arch.lifecycle.*
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.LiveDataReactiveStreams
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.Transformations
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable

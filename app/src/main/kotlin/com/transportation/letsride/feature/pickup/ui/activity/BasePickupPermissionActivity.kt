@@ -6,7 +6,12 @@ import android.support.v7.app.AlertDialog
 import android.widget.Toast
 import com.transportation.letsride.R
 import com.transportation.letsride.common.ui.activity.BaseActivity
-import permissions.dispatcher.*
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.OnNeverAskAgain
+import permissions.dispatcher.OnPermissionDenied
+import permissions.dispatcher.OnShowRationale
+import permissions.dispatcher.PermissionRequest
+import permissions.dispatcher.RuntimePermissions
 
 @RuntimePermissions
 abstract class BasePickupPermissionActivity : BaseActivity() {

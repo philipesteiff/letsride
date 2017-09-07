@@ -21,7 +21,12 @@ import com.transportation.letsride.feature.pickup.viewmodel.PickupViewModel
 import com.transportation.letsride.feature.pickupdropoff.ui.fragment.PickupDropoffFragment
 import com.transportation.letsride.feature.pickupdropoff.viewmodel.FilledAddresses
 import dagger.android.DispatchingAndroidInjector
-import kotlinx.android.synthetic.main.activity_pickup.*
+import kotlinx.android.synthetic.main.activity_pickup.buttonPickupMyLocation
+import kotlinx.android.synthetic.main.activity_pickup.estimatesContainer
+import kotlinx.android.synthetic.main.activity_pickup.imagePickupMapMarker
+import kotlinx.android.synthetic.main.activity_pickup.pickupDropoffAddressContainer
+import kotlinx.android.synthetic.main.activity_pickup.pickupMapContainer
+import kotlinx.android.synthetic.main.activity_pickup.viewPickupCenterPoint
 import javax.inject.Inject
 
 class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomMapFragment.MapListener {

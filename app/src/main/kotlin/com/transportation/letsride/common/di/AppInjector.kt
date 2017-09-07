@@ -10,7 +10,6 @@ import com.transportation.letsride.App
 import com.transportation.letsride.common.di.component.DaggerApplicationComponent
 import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
-import dagger.android.support.HasSupportFragmentInjector
 
 interface AppInjector {
 

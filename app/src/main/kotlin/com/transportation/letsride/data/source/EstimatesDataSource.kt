@@ -1,9 +1,9 @@
 package com.transportation.letsride.data.source
 
 import com.transportation.letsride.data.api.JourneyApi
-import com.transportation.letsride.data.model.PinPoint
 import com.transportation.letsride.data.model.Estimate
 import com.transportation.letsride.data.model.JourneyEstimate
+import com.transportation.letsride.data.model.PinPoint
 import com.transportation.letsride.data.model.Stop
 import io.reactivex.Single
 import javax.inject.Inject

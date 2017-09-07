@@ -1,7 +1,7 @@
 package com.transportation.letsride.data.repository
 
-import com.transportation.letsride.data.model.PinPoint
 import com.transportation.letsride.data.model.Estimate
+import com.transportation.letsride.data.model.PinPoint
 import com.transportation.letsride.data.source.EstimatesDataSource
 import io.reactivex.Single
 
