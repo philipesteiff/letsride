@@ -21,9 +21,7 @@ class RepositoryModule {
   fun providesLocationRepository(
       locationDataSource: LocationDataSource
   ): LocationRepository {
-    return LocationRepositoryImpl(
-        locationDataSource
-    )
+    return LocationRepositoryImpl(locationDataSource)
   }
 
   @Provides

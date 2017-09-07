@@ -7,7 +7,6 @@ import android.widget.LinearLayout
 import com.transportation.letsride.R
 import com.transportation.letsride.common.extensions.getColorCompat
 import com.transportation.letsride.data.model.PinPoint
-import kotlinx.android.synthetic.main.view_address.view.textAddressEta
 import kotlinx.android.synthetic.main.view_address.view.textAddressInput
 import kotlinx.android.synthetic.main.view_address.view.textAddressLabel
 
@@ -49,7 +48,6 @@ class AddressView @JvmOverloads constructor(
         text = labelText
         setTextColor(labelColor)
       }
-      textAddressEta.setTextColor(labelColor)
     }
   }
 

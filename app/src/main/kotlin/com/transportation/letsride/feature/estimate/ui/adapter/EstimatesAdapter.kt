@@ -16,6 +16,7 @@ import com.transportation.letsride.data.model.Estimate
 import kotlinx.android.synthetic.main.row_estimate.view.imgEstimateRowIcon
 import kotlinx.android.synthetic.main.row_estimate.view.textEstimateRowEta
 import kotlinx.android.synthetic.main.row_estimate.view.textEstimateRowName
+import kotlinx.android.synthetic.main.row_estimate.view.textEstimateRowPrice
 
 class EstimatesAdapter(val context: Context) : BaseListAdapter<Estimate>() {
 
@@ -43,16 +44,12 @@ class EstimatesAdapter(val context: Context) : BaseListAdapter<Estimate>() {
   ) : BaseViewHolder<Estimate>(view) {
 
     override fun bind(element: Estimate) {
-
       element.vehicle.run {
         icons?.regular?.let { loadIcon(it).into(itemView.imgEstimateRowIcon) }
         itemView.textEstimateRowName.text = element.vehicle.shortName
         itemView.textEstimateRowEta.text = element.vehicle.eta?.formatted
+        itemView.textEstimateRowPrice.text = element.formattedPrice.orEmpty()
       }
-
-      element.vehicle
-//        `@+id/textPlaceRowName`.text = element.vehicle.shortName
-//        `@+id/textPlaceRowDescription`.text = element?.vehicle?.eta?.formatted
     }
 
     private fun loadIcon(url: String) = glideRequestManager

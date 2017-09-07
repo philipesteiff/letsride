@@ -30,4 +30,11 @@
       android:layout_height="wrap_content"
       tools:text="2-4 min"/>
 
+  <TextView
+      android:id="@+id/textEstimateRowPrice"
+      android:layout_gravity="center"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      tools:text="R$ 15,00"/>
+
 </LinearLayout>
