@@ -64,7 +64,7 @@
       app:srcCompat="@drawable/ic_near_me"/>
 
   <FrameLayout
-      android:id="@+id/categoriesContainer"
+      android:id="@+id/estimatesContainer"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginBottom="8dp"

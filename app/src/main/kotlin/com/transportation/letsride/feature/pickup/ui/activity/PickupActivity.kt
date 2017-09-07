@@ -13,7 +13,7 @@ import com.transportation.letsride.common.extensions.commitTransactions
 import com.transportation.letsride.common.extensions.findFragment
 import com.transportation.letsride.common.util.observe
 import com.transportation.letsride.common.util.unsafeLazy
-import com.transportation.letsride.feature.categories.ui.fragment.CategoriesFragment
+import com.transportation.letsride.feature.estimate.ui.fragment.EstimatesFragment
 import com.transportation.letsride.feature.map.fragment.CustomMapFragment
 import com.transportation.letsride.feature.pickup.viewmodel.MapCameraPositionAction
 import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
@@ -42,8 +42,8 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   var mapFragment: CustomMapFragment? = null
     get() = findFragment(CustomMapFragment.TAG)
 
-  var categoriesFragment: CategoriesFragment? = null
-    get() = findFragment(CategoriesFragment.TAG)
+  var estimatesFragment: EstimatesFragment? = null
+    get() = findFragment(EstimatesFragment.TAG)
 
   val pickupMarker by lazy { listOf(imagePickupMapMarker, viewPickupCenterPoint) }
 
@@ -80,7 +80,7 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
     supportFragmentManager.commitTransactions {
       it.attachFragment(CustomMapFragment.newInstance(), pickupMapContainer.id, CustomMapFragment.TAG)
       it.attachFragment(PickupDropoffFragment.newInstance(), pickupDropoffAddressContainer.id, PickupDropoffFragment.TAG)
-      it.attachFragment(CategoriesFragment.newInstance(), categoriesContainer.id, CategoriesFragment.TAG)
+      it.attachFragment(EstimatesFragment.newInstance(), estimatesContainer.id, EstimatesFragment.TAG)
     }
   }
 
@@ -141,14 +141,14 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   private fun showEstimates(enabled: Boolean?) {
     supportFragmentManager.commitTransactions {
       when (enabled) {
-        true -> categoriesContainer.visibility = VISIBLE
-        false -> categoriesContainer.visibility = GONE
+        true -> estimatesContainer.visibility = VISIBLE
+        false -> estimatesContainer.visibility = GONE
       }
     }
   }
 
   private fun loadEstimates(filledAddresses: FilledAddresses?) {
-    categoriesFragment?.loadCategoriesWith(filledAddresses)
+    estimatesFragment?.loadEstimatesWith(filledAddresses)
   }
 
 }
