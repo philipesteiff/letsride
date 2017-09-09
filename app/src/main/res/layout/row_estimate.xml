@@ -12,7 +12,9 @@
       android:id="@+id/imgEstimateRowIcon"
       android:layout_width="wrap_content"
       android:layout_gravity="center"
+      android:padding="8dp"
       android:contentDescription="Sample"
+      android:background="@color/colorPrimaryDark"
       app:srcCompat="@drawable/ic_estimates_placeholder"
       android:layout_height="wrap_content"/>
 

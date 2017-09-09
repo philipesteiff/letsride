@@ -3,5 +3,6 @@
   <color name="colorPrimary">#3F51B5</color>
   <color name="colorPrimaryDark">#276177</color>
   <color name="colorAccent">#FAD749</color>
-  <color name="dividerColor">@color/colorPrimary</color>
+  <color name="black">#0F191E</color>
+  <color name="widgetBackground">@color/black</color>
 </resources>
