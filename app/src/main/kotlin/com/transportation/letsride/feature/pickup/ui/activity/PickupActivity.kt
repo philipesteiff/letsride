@@ -18,7 +18,7 @@ import com.transportation.letsride.feature.map.fragment.CustomMapFragment
 import com.transportation.letsride.feature.pickup.viewmodel.MapCameraPositionAction
 import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
 import com.transportation.letsride.feature.pickup.viewmodel.PickupViewModel
-import com.transportation.letsride.feature.pickupdropoff.ui.fragment.PickupDropoffFragment
+import com.transportation.letsride.feature.pickupdropoff.ui.fragment.PickupDropOffFragment
 import com.transportation.letsride.feature.pickupdropoff.viewmodel.FilledAddresses
 import dagger.android.DispatchingAndroidInjector
 import kotlinx.android.synthetic.main.activity_pickup.buttonPickupMyLocation
@@ -84,7 +84,7 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   private fun attachViews() {
     supportFragmentManager.commitTransactions {
       it.attachFragment(CustomMapFragment.newInstance(), pickupMapContainer.id, CustomMapFragment.TAG)
-      it.attachFragment(PickupDropoffFragment.newInstance(), pickupDropoffAddressContainer.id, PickupDropoffFragment.TAG)
+      it.attachFragment(PickupDropOffFragment.newInstance(), pickupDropoffAddressContainer.id, PickupDropOffFragment.TAG)
       it.attachFragment(EstimatesFragment.newInstance(), estimatesContainer.id, EstimatesFragment.TAG)
     }
   }

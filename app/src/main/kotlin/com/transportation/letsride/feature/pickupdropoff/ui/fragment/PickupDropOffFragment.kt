@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_pickup_dropoff.addressPickupView
 import timber.log.Timber
 import javax.inject.Inject
 
-class PickupDropoffFragment : BaseFragment() {
+class PickupDropOffFragment : BaseFragment() {
 
   @Inject
   lateinit var navigator: Navigator
@@ -95,7 +95,6 @@ class PickupDropoffFragment : BaseFragment() {
       it.observe(this, mapViewModel::pickupDropOffAddressFilled)
       it.observe(this, pickupViewModel::pickupDropOffAddressFilled)
     }
-
   }
 
   private fun navigateToPickupAddressSearch(unit: Unit?) {
@@ -115,13 +114,13 @@ class PickupDropoffFragment : BaseFragment() {
   }
 
   companion object {
-    val TAG: String = PickupDropoffFragment::class.java.canonicalName
+    val TAG: String = PickupDropOffFragment::class.java.canonicalName
 
     val PICKUP_ADDRESS_REQUEST = 1
     val DROPOFF_ADDRESS_REQUEST = 2
 
-    fun newInstance(): PickupDropoffFragment {
-      return PickupDropoffFragment()
+    fun newInstance(): PickupDropOffFragment {
+      return PickupDropOffFragment()
     }
   }
 

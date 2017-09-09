@@ -23,6 +23,7 @@ buildscript {
       'retrofit'                      : '2.3.0',
       'okhttp'                        : '3.8.1',
       'rxjava2_adapter'               : '2.3.0',
+      'picasso'                       : '2.5.2',
 
       // Animation
       'transition_everywhere'         : '1.7.5',

@@ -32,8 +32,9 @@ class EstimatesFragment : BaseFragment() {
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     recyclerEstimates.apply {
-      this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-      this.adapter = estimatesAdapter
+      layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+      setHasFixedSize(true)
+      adapter = estimatesAdapter
     }
 
     listenData()

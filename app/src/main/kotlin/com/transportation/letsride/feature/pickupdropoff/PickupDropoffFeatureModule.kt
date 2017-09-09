@@ -1,7 +1,7 @@
 package com.transportation.letsride.feature.pickupdropoff
 
 import com.transportation.letsride.common.di.scopes.PerFragment
-import com.transportation.letsride.feature.pickupdropoff.ui.fragment.PickupDropoffFragment
+import com.transportation.letsride.feature.pickupdropoff.ui.fragment.PickupDropOffFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -10,6 +10,6 @@ abstract class PickupDropoffFeatureModule {
 
   @PerFragment
   @ContributesAndroidInjector
-  abstract fun routeFragmentInjector(): PickupDropoffFragment
+  abstract fun routeFragmentInjector(): PickupDropOffFragment
 
 }

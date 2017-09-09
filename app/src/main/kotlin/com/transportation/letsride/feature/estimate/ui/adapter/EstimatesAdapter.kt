@@ -4,14 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestOptions
+import com.squareup.picasso.Picasso
 import com.transportation.letsride.R
 import com.transportation.letsride.common.ui.adapter.BaseListAdapter
 import com.transportation.letsride.common.ui.adapter.BaseViewHolder
-import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.data.model.Estimate
 import kotlinx.android.synthetic.main.row_estimate.view.imgEstimateRowIcon
 import kotlinx.android.synthetic.main.row_estimate.view.textEstimateRowEta
@@ -20,13 +16,7 @@ import kotlinx.android.synthetic.main.row_estimate.view.textEstimateRowPrice
 
 class EstimatesAdapter(val context: Context) : BaseListAdapter<Estimate>() {
 
-  val glideRequestManager: RequestManager by unsafeLazy { Glide.with(context) }
-
-  val glideRequestOptions: RequestOptions = RequestOptions()
-      .placeholder(R.drawable.ic_estimates_placeholder)
-      .error(R.drawable.ic_estimates_placeholder)
-      .circleCrop()
-
+  val iconSize = context.resources.getDimension(R.dimen.ic_estimates_size).toInt()
 
   override fun onBindViewHolder(holder: BaseViewHolder<Estimate>?, position: Int) {
     when (holder) {
@@ -52,10 +42,11 @@ class EstimatesAdapter(val context: Context) : BaseListAdapter<Estimate>() {
       }
     }
 
-    private fun loadIcon(url: String) = glideRequestManager
+    private fun loadIcon(url: String) = Picasso.with(context)
         .load(url)
-        .apply(glideRequestOptions)
-        .transition(DrawableTransitionOptions.withCrossFade())
+        .resize(iconSize, iconSize)
+        .error(R.drawable.ic_estimates_placeholder)
+        .placeholder(R.drawable.ic_estimates_placeholder)
 
   }
 
