@@ -24,7 +24,7 @@ import dagger.android.DispatchingAndroidInjector
 import kotlinx.android.synthetic.main.activity_pickup.buttonPickupMyLocation
 import kotlinx.android.synthetic.main.activity_pickup.estimatesContainer
 import kotlinx.android.synthetic.main.activity_pickup.imagePickupMapMarker
-import kotlinx.android.synthetic.main.activity_pickup.pickupDropoffAddressContainer
+import kotlinx.android.synthetic.main.activity_pickup.pickupDropOffAddressContainer
 import kotlinx.android.synthetic.main.activity_pickup.pickupMapContainer
 import kotlinx.android.synthetic.main.activity_pickup.viewPickupCenterPoint
 import javax.inject.Inject
@@ -84,7 +84,7 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   private fun attachViews() {
     supportFragmentManager.commitTransactions {
       it.attachFragment(CustomMapFragment.newInstance(), pickupMapContainer.id, CustomMapFragment.TAG)
-      it.attachFragment(PickupDropOffFragment.newInstance(), pickupDropoffAddressContainer.id, PickupDropOffFragment.TAG)
+      it.attachFragment(PickupDropOffFragment.newInstance(), pickupDropOffAddressContainer.id, PickupDropOffFragment.TAG)
       it.attachFragment(EstimatesFragment.newInstance(), estimatesContainer.id, EstimatesFragment.TAG)
     }
   }

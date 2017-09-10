@@ -1,6 +1,5 @@
 package com.transportation.letsride.common.di.module
 
-import android.support.annotation.VisibleForTesting
 import com.google.gson.Gson
 import com.transportation.letsride.BuildConfig
 import com.transportation.letsride.data.network.interceptor.AuthHeaders
@@ -18,20 +17,18 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-@VisibleForTesting
 open class NetworkModule {
 
   //region Interceptors
 
   @Provides
   @Singleton
-  internal fun provideAuthHeaders(): AuthHeaders {
+  fun provideAuthHeaders(): AuthHeaders {
     return AuthHeaders()
   }
 
   @Provides
-  @VisibleForTesting
-  open fun providesHeaderInterceptor(
+  fun providesHeaderInterceptor(
       authHeaders: AuthHeaders,
       locale: Locale
   ): HeaderInterceptor {
@@ -85,8 +82,7 @@ open class NetworkModule {
     return buildRetrofit(BuildConfig.API_GOOGLE_MAPS, httpClient, gson)
   }
 
-  @VisibleForTesting
-  protected open fun buildRetrofit(
+  open fun buildRetrofit(
       baseUrl: String,
       httpClient: OkHttpClient,
       gson: Gson

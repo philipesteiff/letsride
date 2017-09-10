@@ -12,7 +12,7 @@ android {
     targetSdkVersion 26
     versionCode 1
     versionName "1.0"
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "com.transportation.letsride.setup.LetsRideTestRunner"
     vectorDrawables.useSupportLibrary = true
   }
   buildTypes {
@@ -80,10 +80,14 @@ dependencies {
   testImplementation "org.hamcrest:hamcrest-core:$versions.hamcrest"
   testImplementation "org.hamcrest:hamcrest-library:$versions.hamcrest"
 
+  kaptAndroidTest "com.google.dagger:dagger-compiler:$versions.dagger"
+  kaptAndroidTest "com.google.dagger:dagger-android-processor:$versions.dagger"
+  androidTestImplementation "org.mockito:mockito-core:$versions.mockito"
   androidTestImplementation "com.android.support.test:runner:$versions.support_test"
   androidTestImplementation "com.android.support.test:rules:$versions.support_test"
   androidTestImplementation "com.android.support.test.espresso:espresso-core:$versions.espresso"
   androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$versions.espresso"
   androidTestImplementation "com.android.support.test.espresso:espresso-intents:$versions.espresso"
   androidTestImplementation "com.squareup.okhttp3:mockwebserver:$versions.mock_webserver"
+  androidTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leak_canary"
 }

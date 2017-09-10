@@ -8,6 +8,7 @@ import dagger.Module
     RepositoryModule::class,
     NetworkModule::class,
     ApiModule::class,
+    LocationModule::class,
     GoogleModule::class,
     ParsersModule::class
 ))

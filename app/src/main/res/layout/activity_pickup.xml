@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.transportation.letsride.feature.pickup.ui.activity.PickupActivity">
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context="com.transportation.letsride.feature.pickup.ui.activity.PickupActivity">
 
   <FrameLayout
       android:id="@+id/pickupMapContainer"
@@ -40,7 +40,7 @@
   <!-- Marker -->
 
   <FrameLayout
-      android:id="@+id/pickupDropoffAddressContainer"
+      android:id="@+id/pickupDropOffAddressContainer"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_margin="8dp"
@@ -59,9 +59,9 @@
       app:backgroundTint="@color/colorPrimaryDark"
       app:elevation="3dp"
       app:fabSize="normal"
-      app:layout_constraintBottom_toTopOf="@+id/pickupDropoffAddressContainer"
       app:layout_constraintEnd_toEndOf="parent"
-      app:srcCompat="@drawable/ic_near_me"/>
+      app:srcCompat="@drawable/ic_near_me"
+      app:layout_constraintBottom_toTopOf="@+id/estimatesContainer"/>
 
   <FrameLayout
       android:id="@+id/estimatesContainer"
