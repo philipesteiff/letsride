@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: "kotlin-allopen"
 
 android {
   compileSdkVersion 26
@@ -35,6 +36,11 @@ android {
 
 kapt {
   correctErrorTypes = true
+}
+
+allOpen {
+  annotation("dagger.Module")
+  annotation("dagger.Provides")
 }
 
 dependencies {
@@ -90,4 +96,5 @@ dependencies {
   androidTestImplementation "com.android.support.test.espresso:espresso-intents:$versions.espresso"
   androidTestImplementation "com.squareup.okhttp3:mockwebserver:$versions.mock_webserver"
   androidTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leak_canary"
+  androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.7.1-beta1'
 }
