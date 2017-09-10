@@ -2,8 +2,10 @@ package com.transportation.letsride
 
 import android.app.Activity
 import android.app.Application
+import android.support.annotation.VisibleForTesting
 import com.transportation.letsride.common.di.ActivityInjector
 import com.transportation.letsride.common.di.AppInjector
+import com.transportation.letsride.common.di.component.ApplicationComponent
 import com.transportation.letsride.common.util.Logger
 import com.transportation.letsride.common.util.MemoryLeakAnalyzer
 import dagger.android.DispatchingAndroidInjector

@@ -1,4 +1,4 @@
-package com.transportation.letsride.feature.map.fragment
+package com.transportation.letsride.feature.map.ui.fragment
 
 import android.content.Context
 import android.os.Bundle

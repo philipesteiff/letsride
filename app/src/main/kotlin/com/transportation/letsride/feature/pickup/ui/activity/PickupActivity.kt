@@ -14,7 +14,7 @@ import com.transportation.letsride.common.extensions.findFragment
 import com.transportation.letsride.common.util.observe
 import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.feature.estimate.ui.fragment.EstimatesFragment
-import com.transportation.letsride.feature.map.fragment.CustomMapFragment
+import com.transportation.letsride.feature.map.ui.fragment.CustomMapFragment
 import com.transportation.letsride.feature.pickup.viewmodel.MapCameraPositionAction
 import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
 import com.transportation.letsride.feature.pickup.viewmodel.PickupViewModel
@@ -23,10 +23,9 @@ import com.transportation.letsride.feature.pickupdropoff.viewmodel.FilledAddress
 import dagger.android.DispatchingAndroidInjector
 import kotlinx.android.synthetic.main.activity_pickup.buttonPickupMyLocation
 import kotlinx.android.synthetic.main.activity_pickup.estimatesContainer
-import kotlinx.android.synthetic.main.activity_pickup.imagePickupMapMarker
 import kotlinx.android.synthetic.main.activity_pickup.pickupDropOffAddressContainer
 import kotlinx.android.synthetic.main.activity_pickup.pickupMapContainer
-import kotlinx.android.synthetic.main.activity_pickup.viewPickupCenterPoint
+import kotlinx.android.synthetic.main.activity_pickup.viewPickupPin
 import javax.inject.Inject
 
 class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomMapFragment.MapListener {
@@ -50,11 +49,10 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   var estimatesFragment: EstimatesFragment? = null
     get() = findFragment(EstimatesFragment.TAG)
 
-  val pickupMarker by lazy { listOf(imagePickupMapMarker, viewPickupCenterPoint) }
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_pickup)
+    viewPickupPin.centerOn(pickupMapContainer)
 
     if (savedInstanceState == null)
       attachViews()
@@ -134,8 +132,8 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
 
   private fun showPickupMarker(enabled: Boolean?) {
     when (enabled) {
-      true -> pickupMarker.forEach { it.visibility = VISIBLE }
-      false -> pickupMarker.forEach { it.visibility = GONE }
+      true -> viewPickupPin.visibility = VISIBLE
+      false -> viewPickupPin.visibility = GONE
     }
   }
 

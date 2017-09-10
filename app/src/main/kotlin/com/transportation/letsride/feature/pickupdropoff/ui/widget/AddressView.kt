@@ -1,7 +1,6 @@
 package com.transportation.letsride.feature.pickupdropoff.ui.widget
 
 import android.content.Context
-import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import com.transportation.letsride.R
@@ -22,10 +21,13 @@ class AddressView @JvmOverloads constructor(
     inflate(context, R.layout.view_address, this)
 
     context.obtainStyledAttributes(attributeSet, R.styleable.AddressView, 0, 0).apply {
-      getInteger(R.styleable.AddressView_addressType, PICKUP_ADDRESS_TYPE).let { setLayoutType(it) }
+      getInteger(R.styleable.AddressView_addressType, PICKUP_ADDRESS_TYPE)
+          .let {
+            setLayoutType(it)
+            setTagAddressInput(it)
+          }
       getString(R.styleable.AddressView_addressHint).let { setAddressHint(it) }
     }.run { recycle() }
-
   }
 
   fun applyAddress(pinPoint: PinPoint?) {
@@ -51,6 +53,14 @@ class AddressView @JvmOverloads constructor(
     }
   }
 
+  private fun setTagAddressInput(type: Int) {
+    textAddressInput.tag = if (type == PICKUP_ADDRESS_TYPE) {
+      PICKUP_ADDRESS_INPUT_TAG
+    } else {
+      DROPOFF_ADDRESS_INPUT_TAG
+    }
+  }
+
   private fun setAddressHint(textHint: String?) {
     textAddressInput.hint = textHint.orEmpty()
   }
@@ -59,8 +69,9 @@ class AddressView @JvmOverloads constructor(
     textAddressInput.text = address.orEmpty()
   }
 
-  override fun onSaveInstanceState(): Parcelable {
-    return super.onSaveInstanceState()
+  companion object {
+    const val PICKUP_ADDRESS_INPUT_TAG = "pickup_address_input_tag"
+    const val DROPOFF_ADDRESS_INPUT_TAG = "dropoff_address_input_tag"
   }
 
 }

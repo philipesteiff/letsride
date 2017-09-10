@@ -93,7 +93,8 @@ class MapViewModel @Inject constructor(
   }
 
   private fun retrieveCurrentPosition() {
-    initialLocationDisposable = locationRepository.location().take(1)
+    initialLocationDisposable = locationRepository.location()
+        .take(1)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
         .subscribe(

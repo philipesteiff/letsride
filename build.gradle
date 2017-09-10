@@ -35,10 +35,11 @@ buildscript {
       'timber'                        : '4.5.1',
 
       // Testing
+      'dagger_mock'                   : '0.7.1-beta1',
       'mock_webserver'                : '3.8.1',
       'espresso'                      : '3.0.0',
       'support_test'                  : '0.5',
-      'mockito'                       : '1.10.19',
+      'mockito'                       : '2.10.0',
       'junit'                         : '4.12',
       'hamcrest'                      : '1.3'
   ]
