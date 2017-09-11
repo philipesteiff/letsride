@@ -37,7 +37,6 @@ buildscript {
       // Testing
       'mockito_kotlin'                : '1.5.0',
       'dagger_mock'                   : '0.7.1-beta1',
-      'mock_webserver'                : '3.8.1',
       'espresso'                      : '3.0.0',
       'support_test'                  : '0.5',
       'mockito'                       : '2.10.0',
