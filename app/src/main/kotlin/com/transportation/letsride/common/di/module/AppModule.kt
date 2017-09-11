@@ -20,7 +20,7 @@ class AppModule {
 
   @Provides
   @Singleton
-  open fun providesLocationRepository(
+  fun providesLocationRepository(
       locationDataSource: LocationDataSource
   ): LocationRepository {
     return LocationRepositoryImpl(locationDataSource)

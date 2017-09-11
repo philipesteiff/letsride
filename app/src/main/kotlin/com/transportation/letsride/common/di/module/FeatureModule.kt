@@ -10,4 +10,4 @@ import dagger.Module
     SearchAddressFeatureModule::class,
     EstimatesFeatureModule::class
 ))
-abstract class FeatureModule
+class FeatureModule

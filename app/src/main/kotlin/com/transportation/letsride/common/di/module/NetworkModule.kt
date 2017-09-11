@@ -17,7 +17,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-open class NetworkModule {
+class NetworkModule {
 
   //region Interceptors
 
@@ -82,7 +82,7 @@ open class NetworkModule {
     return buildRetrofit(BuildConfig.API_GOOGLE_MAPS, httpClient, gson)
   }
 
-  open fun buildRetrofit(
+  fun buildRetrofit(
       baseUrl: String,
       httpClient: OkHttpClient,
       gson: Gson

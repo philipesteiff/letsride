@@ -28,9 +28,7 @@ class PinView @JvmOverloads constructor(
       val applyConstraintSet = ConstraintSet().apply { clone(parentConstraintLayout) }
       applyConstraintSet.setMargin(this@PinView.id, ConstraintSet.BOTTOM, marginBottom)
       applyConstraintSet.applyTo(parentConstraintLayout)
-
     }
   }
-
 
 }

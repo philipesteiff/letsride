@@ -23,7 +23,7 @@
           android:background="@android:color/transparent"
           android:focusable="true"
           android:focusableInTouchMode="true"
-          android:hint="Search Address"
+          android:hint="@string/search_address_hint"
           android:imeOptions="actionSearch"
           android:inputType="text"
           android:textSize="20sp"/>

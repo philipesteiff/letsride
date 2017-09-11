@@ -70,7 +70,6 @@ class MapViewModel @Inject constructor(
           pickupAddress?.getLatLng(),
           dropOffAddress?.getLatLng()
       )
-
     }
   }
 
@@ -106,6 +105,5 @@ class MapViewModel @Inject constructor(
             { error -> Timber.e(error) }
         ).apply { disposables += this }
   }
-
 
 }

@@ -10,7 +10,7 @@ abstract class CustomMapFeatureModule {
 
   @PerFragment
   @ContributesAndroidInjector
-  abstract fun mapFragmentInjector(): CustomMapFragment
+  abstract fun customMapFragmentInjector(): CustomMapFragment
 
 }
 

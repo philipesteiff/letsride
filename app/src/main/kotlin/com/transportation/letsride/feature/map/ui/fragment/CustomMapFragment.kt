@@ -49,7 +49,6 @@ class CustomMapFragment : SupportMapFragment() {
             it.apply {
               setMapStyle(mapStyle)
 
-
               isIndoorEnabled = false
               uiSettings?.apply {
                 isCompassEnabled = false

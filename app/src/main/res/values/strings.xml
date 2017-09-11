@@ -6,4 +6,8 @@
   <string name="button_deny">Deny</string>
   <string name="location_permission_denied">Location permission denied</string>
   <string name="location_permission_permanently_denied_message">Location permission permanently denied message</string>
+  <string name="search_address_hint">Search Address</string>
+  <string name="pickup_location">Pickup location</string>
+  <string name="where_to">Where to?</string>
+  <string name="category_description">category_description</string>
 </resources>
