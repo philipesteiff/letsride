@@ -2,6 +2,8 @@ package com.transportation.letsride.feature.pickupdropoff.viewmodel
 
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
+import android.os.Bundle
+import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
 import com.transportation.letsride.common.util.plusAssign
 import com.transportation.letsride.common.viewmodel.BaseViewModel
@@ -35,6 +37,21 @@ class PickupDropOffViewModel @Inject constructor(
   val navigateToPickupAddressSearch = MutableLiveData<Unit>()
   val navigateToDropOffAddressSearch = MutableLiveData<Unit>()
 
+  override fun restoreState(savedInstanceState: Bundle) {
+    val state = savedInstanceState.get(PickupDropOffViewModelState.KEY_STATE) as PickupDropOffViewModelState
+    state.apply {
+      pickupAddress?.let { pickupAddressChange.value = it }
+      dropOffAddress?.let { dropOffAddressChange.value = it }
+    }
+  }
+
+  override fun saveState(): Parcelable {
+    return PickupDropOffViewModelState(
+        pickupAddressChange.value,
+        dropOffAddressChange.value
+    )
+  }
+
   fun newMapCameraPosition(mapCameraPositionAction: MapCameraPositionAction?) {
     when (mapCameraPositionAction) {
       is MapCameraPositionAction.MapDragged -> findAddress(mapCameraPositionAction.newLocation)
@@ -46,7 +63,7 @@ class PickupDropOffViewModel @Inject constructor(
     navigateToPickupAddressSearch.value = Unit
   }
 
-  fun onDropoffAddressClicked() {
+  fun onDropOffAddressClicked() {
     navigateToDropOffAddressSearch.value = Unit
   }
 

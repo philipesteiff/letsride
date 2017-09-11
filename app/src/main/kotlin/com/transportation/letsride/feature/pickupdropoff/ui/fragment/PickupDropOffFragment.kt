@@ -16,6 +16,7 @@ import com.transportation.letsride.data.model.PinPoint
 import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
 import com.transportation.letsride.feature.pickup.viewmodel.PickupViewModel
 import com.transportation.letsride.feature.pickupdropoff.viewmodel.PickupDropOffViewModel
+import com.transportation.letsride.feature.pickupdropoff.viewmodel.PickupDropOffViewModelState
 import com.transportation.letsride.feature.search.ui.activity.SearchAddressActivity
 import kotlinx.android.synthetic.main.fragment_pickup_dropoff.addressDropOffView
 import kotlinx.android.synthetic.main.fragment_pickup_dropoff.addressPickupView
@@ -37,7 +38,7 @@ class PickupDropOffFragment : BaseFragment() {
         .get(MapViewModel::class.java)
   }
 
-  val pickupDropoffViewModel: PickupDropOffViewModel by unsafeLazy {
+  val pickupDropOffViewModel: PickupDropOffViewModel by unsafeLazy {
     ViewModelProviders.of(this, viewModelFactory)
         .get(PickupDropOffViewModel::class.java)
   }
@@ -52,12 +53,22 @@ class PickupDropOffFragment : BaseFragment() {
     listenViews()
   }
 
+  override fun onActivityCreated(savedInstanceState: Bundle?) {
+    super.onActivityCreated(savedInstanceState)
+    pickupDropOffViewModel.savedState(savedInstanceState)
+  }
+
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     when (requestCode) {
-      PICKUP_ADDRESS_REQUEST -> shouldExtractData(resultCode, data) { pickupDropoffViewModel.onReceivePickupAddressResult(it) }
-      DROPOFF_ADDRESS_REQUEST -> shouldExtractData(resultCode, data) { pickupDropoffViewModel.onReceiveDropOffAddressResult(it) }
+      PICKUP_ADDRESS_REQUEST -> shouldExtractData(resultCode, data) { pickupDropOffViewModel.onReceivePickupAddressResult(it) }
+      DROPOFF_ADDRESS_REQUEST -> shouldExtractData(resultCode, data) { pickupDropOffViewModel.onReceiveDropOffAddressResult(it) }
     }
+  }
+
+  override fun onSaveInstanceState(outState: Bundle?) {
+    outState?.putParcelable(PickupDropOffViewModelState.KEY_STATE, pickupDropOffViewModel.saveState())
+    super.onSaveInstanceState(outState)
   }
 
   private fun shouldExtractData(resultCode: Int, data: Intent?, resultOk: (PinPoint) -> Unit) {
@@ -68,30 +79,30 @@ class PickupDropOffFragment : BaseFragment() {
   }
 
   private fun listenViews() {
-    addressPickupView.setOnClickListener { pickupDropoffViewModel.onPickupAddressClicked() }
-    addressDropOffView.setOnClickListener { pickupDropoffViewModel.onDropoffAddressClicked() }
+    addressPickupView.setOnClickListener { pickupDropOffViewModel.onPickupAddressClicked() }
+    addressDropOffView.setOnClickListener { pickupDropOffViewModel.onDropOffAddressClicked() }
   }
 
   private fun listenData() {
     mapViewModel.mapCameraPosition
-        .observe(this, pickupDropoffViewModel::newMapCameraPosition)
+        .observe(this, pickupDropOffViewModel::newMapCameraPosition)
 
-    pickupDropoffViewModel.pickupAddressChange
+    pickupDropOffViewModel.pickupAddressChange
         .observe(this, this::pickupAddressChanged)
 
-    pickupDropoffViewModel.adjustMapByPickupAddressLocation
+    pickupDropOffViewModel.adjustMapByPickupAddressLocation
         .observe(this, mapViewModel::moveToPickupAddressLocation)
 
-    pickupDropoffViewModel.dropOffAddressChange
+    pickupDropOffViewModel.dropOffAddressChange
         .observe(this, this::dropOffAddressChanged)
 
-    pickupDropoffViewModel.navigateToPickupAddressSearch
+    pickupDropOffViewModel.navigateToPickupAddressSearch
         .observe(this, this::navigateToPickupAddressSearch)
 
-    pickupDropoffViewModel.navigateToDropOffAddressSearch
+    pickupDropOffViewModel.navigateToDropOffAddressSearch
         .observe(this, this::navigateToDropOffAddressSearch)
 
-    pickupDropoffViewModel.pickupDropOffAddressFilled.let {
+    pickupDropOffViewModel.pickupDropOffAddressFilled.let {
       it.observe(this, mapViewModel::pickupDropOffAddressFilled)
       it.observe(this, pickupViewModel::pickupDropOffAddressFilled)
     }

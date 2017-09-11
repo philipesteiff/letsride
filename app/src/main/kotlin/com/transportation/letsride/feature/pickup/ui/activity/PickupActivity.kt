@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.activity_pickup.estimatesContainer
 import kotlinx.android.synthetic.main.activity_pickup.pickupDropOffAddressContainer
 import kotlinx.android.synthetic.main.activity_pickup.pickupMapContainer
 import kotlinx.android.synthetic.main.activity_pickup.viewPickupPin
+import timber.log.Timber
 import javax.inject.Inject
 
 class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomMapFragment.MapListener {
@@ -59,7 +60,6 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
 
     listenData()
     listenViews()
-
   }
 
   override fun onBackPressed() {
@@ -142,11 +142,9 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   }
 
   private fun showEstimates(enabled: Boolean?) {
-    supportFragmentManager.commitTransactions {
-      when (enabled) {
-        true -> estimatesContainer.visibility = VISIBLE
-        false -> estimatesContainer.visibility = GONE
-      }
+    when (enabled) {
+      true -> estimatesContainer.visibility = VISIBLE
+      false -> estimatesContainer.visibility = GONE
     }
   }
 

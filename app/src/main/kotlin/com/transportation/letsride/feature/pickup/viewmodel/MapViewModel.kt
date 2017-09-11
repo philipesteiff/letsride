@@ -60,6 +60,7 @@ class MapViewModel @Inject constructor(
   }
 
   fun moveToPickupAddressLocation(location: LatLng?) {
+    initialLocationDisposable.dispose()
     location?.let { mapCameraPosition.value = MapCameraPositionAction.AdjustMap(it) }
   }
 
@@ -99,7 +100,7 @@ class MapViewModel @Inject constructor(
         .observeOn(schedulers.ui())
         .subscribe(
             { newLocation ->
-              mapCameraPosition.postValue(MapCameraPositionAction.JustMoveMap(newLocation.toLatLng()))
+              mapCameraPosition.value = MapCameraPositionAction.JustMoveMap(newLocation.toLatLng())
               initialLocationDisposable.dispose()
             },
             { error -> Timber.e(error) }

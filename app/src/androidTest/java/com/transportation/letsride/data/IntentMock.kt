@@ -9,10 +9,9 @@ import com.transportation.letsride.feature.search.ui.activity.SearchAddressActiv
 
 object IntentMock {
 
-  fun mockSearchAddressActivityResult(pinPointReponse: PinPoint) = Instrumentation.ActivityResult(
+  fun mockSearchAddressActivityResult(pinPointResponse: PinPoint) = Instrumentation.ActivityResult(
       Activity.RESULT_OK,
-      Intent().putExtra(SearchAddressActivity.EXTRA_ADDRESS, Fabricator.puertaDelSolPinPoint())
+      Intent().putExtra(SearchAddressActivity.EXTRA_ADDRESS, pinPointResponse)
   )
-
 
 }

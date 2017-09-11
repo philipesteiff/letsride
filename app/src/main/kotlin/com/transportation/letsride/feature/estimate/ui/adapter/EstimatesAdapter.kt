@@ -20,16 +20,16 @@ class EstimatesAdapter(val context: Context) : BaseListAdapter<Estimate>() {
 
   override fun onBindViewHolder(holder: BaseViewHolder<Estimate>?, position: Int) {
     when (holder) {
-      is SuggestionViewHolder -> holder.bind(get(position))
+      is EstimatesViewHolder -> holder.bind(get(position))
     }
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Estimate> {
     val inflatedView = LayoutInflater.from(parent.context).inflate(LAYOUT_ID, parent, false)
-    return SuggestionViewHolder(inflatedView)
+    return EstimatesViewHolder(inflatedView)
   }
 
-  inner class SuggestionViewHolder(
+  inner class EstimatesViewHolder(
       val view: View
   ) : BaseViewHolder<Estimate>(view) {
 

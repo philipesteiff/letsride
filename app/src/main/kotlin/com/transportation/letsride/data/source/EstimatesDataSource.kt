@@ -15,35 +15,14 @@ class EstimatesDataSource @Inject constructor(
 ) {
 
   fun estimates(pickupPinPoint: PinPoint?, dropOffPinPoint: PinPoint?): Single<List<Estimate>> {
-    val journeyEstimate = buildFakeJourney()//buildJourney(pickupPinPoint, dropOffPinPoint)
+    val journeyEstimate = buildJourney(pickupPinPoint, dropOffPinPoint)
     return journeyApi.estimate(journeyEstimate)
         .flatMap { response ->
           when {
             response.isSuccessful -> Single.fromCallable { response.body() }
-            else -> Single.error(Exception(""))
+            else -> Single.error(Exception("Failed to receive estimates."))
           }
         }
-  }
-
-  private fun buildFakeJourney(): JourneyEstimate {
-    val pickupStop = Stop(
-        location = listOf(40.4169473, -3.7057172),
-        name = "Puerta del Sol",
-        address = "Plaza de la Puerta del Sol",
-        number = "s/n",
-        city = "Madrid",
-        country = "Spain"
-    )
-    val dropOffStop = Stop(
-        location = listOf(40.4169473, -3.7057172),
-        name = "Puerta del Sol",
-        address = "Plaza de la Puerta del Sol",
-        number = "s/n",
-        city = "Madrid",
-        country = "Spain"
-    )
-    return listOf(pickupStop, dropOffStop)
-        .let { stops -> JourneyEstimate(stops) }
   }
 
   private fun buildJourney(pickupPinPoint: PinPoint?, dropOffPinPoint: PinPoint?): JourneyEstimate {

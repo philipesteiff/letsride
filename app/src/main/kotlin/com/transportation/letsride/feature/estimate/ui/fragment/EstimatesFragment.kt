@@ -33,7 +33,6 @@ class EstimatesFragment : BaseFragment() {
     super.onViewCreated(view, savedInstanceState)
     recyclerEstimates.apply {
       layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-      setHasFixedSize(true)
       adapter = estimatesAdapter
     }
 
