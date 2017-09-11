@@ -33,4 +33,13 @@ class EstimatesFragmentTest {
         .isEstimatesVisible()
   }
 
+  @Test
+  fun filledAddresses_estimatesMustBeVisibleWithEmptyList() {
+    robot.launch()
+        .mockEstimatesRequestZeroResults()
+        .clickPickupAddressInput(PickupActivityRobot.MockedLocation.HQ)
+        .clickDropOffAddressInput(PickupActivityRobot.MockedLocation.PUERTA_DEL_SOL)
+        .isEstimatesVisible()
+  }
+
 }

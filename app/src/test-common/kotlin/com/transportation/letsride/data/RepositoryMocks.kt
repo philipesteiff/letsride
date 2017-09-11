@@ -51,5 +51,15 @@ open class RepositoryMocks {
     )).thenReturn(Single.just(Fabricator.estimatesHqToPuertaDelSol()))
   }
 
+  fun mockEstimatesHqToPuertaDelSolZeroResults() {
+    val pickupPinPoint = Fabricator.hqPinPoint()
+    val dropOffPinPoint = Fabricator.puertaDelSolPinPoint()
+
+    whenever(journeyRepository.estimates(
+        pickupPinPoint,
+        dropOffPinPoint
+    )).thenReturn(Single.just(emptyList()))
+  }
+
 
 }

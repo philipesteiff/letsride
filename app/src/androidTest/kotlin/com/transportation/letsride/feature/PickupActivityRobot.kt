@@ -136,6 +136,10 @@ class PickupActivityRobot(val activityRule: ActivityTestRule<PickupActivity>) {
     repositoryMocks.mockEstimatesHqToPuertaDelSol()
   }
 
+  fun mockEstimatesRequestZeroResults() = apply {
+    repositoryMocks.mockEstimatesHqToPuertaDelSolZeroResults()
+  }
+
   fun isEstimatesVisible() = apply {
     onView(withId(R.id.estimatesContainer))
         .check(matches((isCompletelyDisplayed())))
