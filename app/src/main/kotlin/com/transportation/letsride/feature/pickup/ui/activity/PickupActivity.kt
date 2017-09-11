@@ -3,9 +3,12 @@ package com.transportation.letsride.feature.pickup.ui.activity
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.Gravity
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import com.google.android.gms.maps.model.LatLng
+import com.transitionseverywhere.Slide
+import com.transitionseverywhere.TransitionManager
 import com.transportation.letsride.R
 import com.transportation.letsride.common.di.FragmentInjector
 import com.transportation.letsride.common.extensions.attachFragment
@@ -137,9 +140,14 @@ class PickupActivity : BasePickupPermissionActivity(), FragmentInjector, CustomM
   }
 
   private fun showEstimates(enabled: Boolean?) {
-    when (enabled) {
-      true -> estimatesContainer.visibility = VISIBLE
-      false -> estimatesContainer.visibility = GONE
+    enabled?.let {
+      when (it) {
+        true -> VISIBLE to Slide(Gravity.TOP)
+        false -> GONE to Slide(Gravity.BOTTOM)
+      }.let { (visibility, transition) ->
+        TransitionManager.beginDelayedTransition(pickupContainer, transition)
+        estimatesContainer.visibility = visibility
+      }
     }
   }
 
