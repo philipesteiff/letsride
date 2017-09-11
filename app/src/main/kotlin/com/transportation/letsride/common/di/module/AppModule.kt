@@ -18,7 +18,6 @@ import javax.inject.Singleton
     LoggerModule::class,
     NetworkModule::class,
     ApiModule::class,
-    LocationModule::class,
     GoogleModule::class,
     ParsersModule::class
 ))

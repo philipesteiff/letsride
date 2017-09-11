@@ -1,10 +1,8 @@
 package com.transportation.letsride.data.source
 
-import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import com.transportation.letsride.data.Fabricator
 import com.transportation.letsride.data.api.JourneyApi
-import com.transportation.letsride.data.model.Estimate
 import com.transportation.letsride.data.model.JourneyBuilder
 import io.reactivex.Single
 import org.junit.Before
