@@ -1,16 +1,35 @@
 package com.transportation.letsride.data
 
 import android.location.Location
+import android.location.LocationManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.transportation.letsride.data.model.Estimate
 import com.transportation.letsride.data.model.PinPoint
+import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 
 object Fabricator {
 
-  fun hqLocation() = Location("mock").apply {
-    latitude = 40.4456588; longitude = -3.7086401 /* Cabify HQ */
+  fun mockLocation(
+      provider: String = LocationManager.GPS_PROVIDER,
+      latitude: Double = -23.0,
+      longitude: Double = -46.0,
+      accuracy: Float = 15f
+  ): Location = Mockito.mock(Location::class.java).apply {
+    `when`(this.accuracy).thenReturn(accuracy)
+    `when`(this.latitude).thenReturn(latitude)
+    `when`(this.longitude).thenReturn(longitude)
+    `when`(this.provider).thenReturn(provider)
   }
+
+  //  fun hqLocation() = Location("mock").apply {
+//    latitude = 40.4456588; longitude = -3.7086401 /* Cabify HQ */
+//  }
+
+  open fun hqLocation() = mockLocation(
+      latitude = 40.4456588, longitude = -3.7086401 /* Cabify HQ */
+  )
 
   fun hqPinPoint() = PinPoint(
       name = "Calle Marqués de Lema",
@@ -22,9 +41,9 @@ object Fabricator {
       longitude = hqLocation().longitude
   )
 
-  fun puertaDelSolLocation() = Location("mock").apply {
-    latitude = 40.4169514; longitude = -3.7057172
-  }
+  open fun puertaDelSolLocation() = mockLocation(
+      latitude = 40.4169514, longitude = -3.7057172
+  )
 
   fun puertaDelSolPinPoint() = PinPoint(
       name = "Puerta del Sol",

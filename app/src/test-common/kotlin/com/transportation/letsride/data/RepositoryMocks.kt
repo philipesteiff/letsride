@@ -22,23 +22,29 @@ open class RepositoryMocks {
   lateinit var journeyRepository: JourneyRepository
 
   fun mockHqAddressLocation() {
-    Mockito.`when`(addressRepository.getAddressFromLocation(Fabricator.hqLocation().toLatLng()))
-        .thenReturn(Maybe.just(Fabricator.hqPinPoint()))
+    val hqLocation = Fabricator.hqLocation()
+    val hqPinPoint = Fabricator.hqPinPoint()
+    Mockito.`when`(addressRepository.getAddressFromLocation(hqLocation.toLatLng()))
+        .thenReturn(Maybe.just(hqPinPoint))
     Mockito.`when`(locationRepository.location())
-        .thenReturn(Observable.just(Fabricator.hqLocation()))
+        .thenReturn(Observable.just(hqLocation))
   }
 
   fun mockPuertaDelSolLocation() {
-    Mockito.`when`(addressRepository.getAddressFromLocation(Fabricator.puertaDelSolLocation().toLatLng()))
-        .thenReturn(Maybe.just(Fabricator.puertaDelSolPinPoint()))
+    val puertaDelSolLocation = Fabricator.puertaDelSolLocation()
+    val puertaDelSolPinPoint = Fabricator.puertaDelSolPinPoint()
+    Mockito.`when`(addressRepository.getAddressFromLocation(puertaDelSolLocation.toLatLng()))
+        .thenReturn(Maybe.just(puertaDelSolPinPoint))
     Mockito.`when`(locationRepository.location())
-        .thenReturn(Observable.just(Fabricator.puertaDelSolLocation()))
+        .thenReturn(Observable.just(puertaDelSolLocation))
   }
 
   fun mockEstimatesHqToPuertaDelSol() {
+    val pickupPinPoint = Fabricator.hqPinPoint()
+    val dropOffPinPoint = Fabricator.puertaDelSolPinPoint()
     Mockito.`when`(journeyRepository.estimates(
-        Fabricator.hqPinPoint(),
-        Fabricator.puertaDelSolPinPoint()
+        pickupPinPoint,
+        dropOffPinPoint
     )).thenReturn(Single.just(Fabricator.estimatesHqToPuertaDelSol()))
   }
 
