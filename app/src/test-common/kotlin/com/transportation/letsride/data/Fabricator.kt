@@ -4,10 +4,10 @@ import android.location.Location
 import android.location.LocationManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.nhaarman.mockito_kotlin.whenever
 import com.transportation.letsride.data.model.Estimate
 import com.transportation.letsride.data.model.PinPoint
-import org.mockito.Mockito
-import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 
 object Fabricator {
 
@@ -16,18 +16,14 @@ object Fabricator {
       latitude: Double = -23.0,
       longitude: Double = -46.0,
       accuracy: Float = 15f
-  ): Location = Mockito.mock(Location::class.java).apply {
-    `when`(this.accuracy).thenReturn(accuracy)
-    `when`(this.latitude).thenReturn(latitude)
-    `when`(this.longitude).thenReturn(longitude)
-    `when`(this.provider).thenReturn(provider)
+  ): Location = mock(Location::class.java).apply {
+    whenever(this.accuracy).thenReturn(accuracy)
+    whenever(this.latitude).thenReturn(latitude)
+    whenever(this.longitude).thenReturn(longitude)
+    whenever(this.provider).thenReturn(provider)
   }
 
-  //  fun hqLocation() = Location("mock").apply {
-//    latitude = 40.4456588; longitude = -3.7086401 /* Cabify HQ */
-//  }
-
-  open fun hqLocation() = mockLocation(
+  fun hqLocation() = mockLocation(
       latitude = 40.4456588, longitude = -3.7086401 /* Cabify HQ */
   )
 
@@ -41,7 +37,7 @@ object Fabricator {
       longitude = hqLocation().longitude
   )
 
-  open fun puertaDelSolLocation() = mockLocation(
+  fun puertaDelSolLocation() = mockLocation(
       latitude = 40.4169514, longitude = -3.7057172
   )
 
@@ -75,5 +71,7 @@ object Fabricator {
   private val listType = object : TypeToken<List<Estimate>>() {}.type
   fun estimatesHqToPuertaDelSol(): List<Estimate> = Gson().fromJson<List<Estimate>>(estimatesJson, listType)
   //endregion
+
+
 
 }

@@ -2,6 +2,7 @@ package com.transportation.letsride.feature.pickup
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
+import com.nhaarman.mockito_kotlin.mock
 import com.transportation.letsride.data.Fabricator
 import com.transportation.letsride.feature.pickup.viewmodel.PickupViewModel
 import com.transportation.letsride.feature.pickup.viewmodel.ViewState
@@ -15,9 +16,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
-import org.mockito.Mockito.*
+import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 
 @RunWith(JUnit4::class)
@@ -35,7 +34,7 @@ class PickupViewModelTest {
   }
 
   @Test
-  fun testViewStateMustBeInit() {
+  fun testViewStateMustBeInitState() {
     assertThat(pickupViewModel.viewState.value, `is`(ViewState.INIT))
   }
 
@@ -65,10 +64,10 @@ class PickupViewModelTest {
 
   @Test
   fun testWhenAddressFilledMustSetViewStateAndEstimates() {
-    val viewStateObserver = mock(Observer::class.java) as Observer<ViewState>
+    val viewStateObserver = mock<Observer<ViewState>>()
     pickupViewModel.viewState.observeForever(viewStateObserver)
 
-    val estimatesObserver = mock(Observer::class.java) as Observer<FilledAddresses>
+    val estimatesObserver = mock<Observer<FilledAddresses>>()
     pickupViewModel.estimates.observeForever(estimatesObserver)
 
     val filledAddresses = Fabricator.hqPinPoint() to Fabricator.puertaDelSolPinPoint()
@@ -76,6 +75,20 @@ class PickupViewModelTest {
 
     verify(viewStateObserver).onChanged(ViewState.ESTIMATE)
     verify(estimatesObserver).onChanged(filledAddresses)
+  }
+
+  @Test
+  fun testEstimatesVisibilityMustBeChangedWhenViewStateChange() {
+    val viewStateObserver = mock<Observer<ViewState>>()
+    pickupViewModel.viewState.observeForever(viewStateObserver)
+
+    val isEstimatesVisibleObserver = mock<Observer<Boolean>>()
+    pickupViewModel.isEstimatesVisible.observeForever(isEstimatesVisibleObserver)
+
+    verify(isEstimatesVisibleObserver).onChanged(false)
+
+    pickupViewModel.viewState.value = ViewState.ESTIMATE
+    verify(isEstimatesVisibleObserver).onChanged(true)
   }
 
 

@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 class EstimatesDataSource @Inject constructor(
-    val journeyApi: JourneyApi
+    private val journeyApi: JourneyApi
 ) {
 
   fun estimates(pickupPinPoint: PinPoint?, dropOffPinPoint: PinPoint?): Single<List<Estimate>> {

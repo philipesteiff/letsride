@@ -88,6 +88,7 @@ dependencies {
 
   testImplementation "junit:junit:$versions.junit"
   testImplementation "org.mockito:mockito-core:$versions.mockito"
+  testImplementation "com.nhaarman:mockito-kotlin:$versions.mockito_kotlin"
   testImplementation "org.hamcrest:hamcrest-core:$versions.hamcrest"
   testImplementation "org.hamcrest:hamcrest-library:$versions.hamcrest"
   testImplementation("android.arch.core:core-testing:$versions.arch_components", {
@@ -99,6 +100,7 @@ dependencies {
   kaptAndroidTest "com.google.dagger:dagger-compiler:$versions.dagger"
   kaptAndroidTest "com.google.dagger:dagger-android-processor:$versions.dagger"
   androidTestImplementation "org.mockito:mockito-android:$versions.mockito"
+  androidTestImplementation "com.nhaarman:mockito-kotlin:$versions.mockito_kotlin"
   androidTestImplementation "com.android.support.test:runner:$versions.support_test"
   androidTestImplementation "com.android.support.test:rules:$versions.support_test"
   androidTestImplementation "com.android.support.test.espresso:espresso-core:$versions.espresso"

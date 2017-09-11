@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AddressDataSource @Inject constructor(
-    val geocoder: Geocoder
+    private val geocoder: Geocoder
 ) {
 
   fun findAddressByLocation(latLng: LatLng, maxResults: Int = DEFAULT_MAX_RESULTS): Maybe<PinPoint> {

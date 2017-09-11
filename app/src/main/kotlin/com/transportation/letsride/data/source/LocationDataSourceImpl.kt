@@ -16,8 +16,6 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// TODO Alguma subscription não esta fechando, deixando a conexão do apiClient aberta.
-
 class LocationDataSourceImpl(
     private val googleApiClient: GoogleApiClient
 ) : LocationDataSource,

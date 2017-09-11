@@ -35,6 +35,7 @@ buildscript {
       'timber'                        : '4.5.1',
 
       // Testing
+      'mockito_kotlin'                : '1.5.0',
       'dagger_mock'                   : '0.7.1-beta1',
       'mock_webserver'                : '3.8.1',
       'espresso'                      : '3.0.0',
