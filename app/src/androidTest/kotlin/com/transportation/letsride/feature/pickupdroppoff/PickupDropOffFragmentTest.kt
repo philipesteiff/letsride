@@ -1,7 +1,7 @@
 package com.transportation.letsride.feature.pickupdroppoff
 
-import android.support.test.espresso.intent.rule.IntentsTestRule
 import android.support.test.filters.LargeTest
+import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.transportation.letsride.feature.PickupActivityRobot
 import com.transportation.letsride.feature.pickup.ui.activity.PickupActivity
@@ -14,7 +14,7 @@ import org.junit.runner.RunWith
 class PickupDropOffFragmentTest {
 
   @Rule @JvmField
-  val activityRule: IntentsTestRule<PickupActivity> = IntentsTestRule(PickupActivity::class.java, true, false)
+  val activityRule: ActivityTestRule<PickupActivity> = ActivityTestRule(PickupActivity::class.java, true, false)
 
   val robot = PickupActivityRobot(activityRule)
 
@@ -47,6 +47,7 @@ class PickupDropOffFragmentTest {
   @Test
   fun pickupAddressClick_shouldRetrieveDropOffAddressFilled() {
     robot.launch()
+        .mockEstimatesRequest()
         .clickDropOffAddressInput(PickupActivityRobot.MockedLocation.PUERTA_DEL_SOL)
         .checkDropOffAddressInput(PickupActivityRobot.MockedLocation.PUERTA_DEL_SOL)
   }

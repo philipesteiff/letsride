@@ -15,20 +15,19 @@ import android.support.test.rule.ActivityTestRule
 import com.transportation.letsride.R
 import com.transportation.letsride.data.Fabricator
 import com.transportation.letsride.data.IntentMock
-import com.transportation.letsride.data.RepositoryMocks
 import com.transportation.letsride.data.model.PinPoint
 import com.transportation.letsride.feature.pickup.ui.activity.PickupActivity
 import com.transportation.letsride.feature.pickupdropoff.ui.widget.AddressView
 import com.transportation.letsride.feature.search.ui.activity.SearchAddressActivity
-import org.hamcrest.core.Is
+import com.transportation.letsride.util.RepositoryMocksRuled
+import org.hamcrest.core.Is.`is`
 import org.hamcrest.core.IsNot.not
-
 
 class PickupActivityRobot(val activityRule: ActivityTestRule<PickupActivity>) {
 
   enum class MockedLocation { HQ, PUERTA_DEL_SOL }
 
-  val repositoryMocks = RepositoryMocks()
+  val repositoryMocks = RepositoryMocksRuled()
 
   fun launch(mockedLocation: MockedLocation = MockedLocation.HQ) = apply {
     when (mockedLocation) {
@@ -66,14 +65,14 @@ class PickupActivityRobot(val activityRule: ActivityTestRule<PickupActivity>) {
   fun checkPickupAddressInput(mockedLocation: MockedLocation) = apply {
     val addressInput = retrieveAddressStringByMockedLocation(mockedLocation)
 
-    onView(ViewMatchers.withTagValue(Is.`is`(AddressView.PICKUP_ADDRESS_INPUT_TAG)))
+    onView(ViewMatchers.withTagValue(`is`(AddressView.PICKUP_ADDRESS_INPUT_TAG)))
         .check(matches(withText(addressInput)))
   }
 
   fun checkDropOffAddressInput(mockedLocation: MockedLocation) = apply {
     val addressInput = retrieveAddressStringByMockedLocation(mockedLocation)
 
-    onView(ViewMatchers.withTagValue(Is.`is`(AddressView.DROPOFF_ADDRESS_INPUT_TAG)))
+    onView(ViewMatchers.withTagValue(`is`(AddressView.DROPOFF_ADDRESS_INPUT_TAG)))
         .check(matches(withText(addressInput)))
   }
 
@@ -94,12 +93,12 @@ class PickupActivityRobot(val activityRule: ActivityTestRule<PickupActivity>) {
 
   fun isPickupAddressFilled(mockedLocation: MockedLocation) = apply {
     val addressInput = retrieveAddressStringByMockedLocation(mockedLocation)
-    onView(withTagValue(Is.`is`(AddressView.PICKUP_ADDRESS_INPUT_TAG)))
+    onView(withTagValue(`is`(AddressView.PICKUP_ADDRESS_INPUT_TAG)))
         .check(matches(withText(addressInput)))
   }
 
   fun isDropOffAddressUnfilled() = apply {
-    onView(withTagValue(Is.`is`(AddressView.DROPOFF_ADDRESS_INPUT_TAG)))
+    onView(withTagValue(`is`(AddressView.DROPOFF_ADDRESS_INPUT_TAG)))
         .check(matches(withText("")))
   }
 
@@ -110,7 +109,7 @@ class PickupActivityRobot(val activityRule: ActivityTestRule<PickupActivity>) {
     Intents.intending(IntentMatchers.hasComponent(SearchAddressActivity::class.java.name))
         .respondWith(IntentMock.mockSearchAddressActivityResult(pinPoint))
 
-    onView(withTagValue(Is.`is`(AddressView.PICKUP_ADDRESS_INPUT_TAG)))
+    onView(withTagValue(`is`(AddressView.PICKUP_ADDRESS_INPUT_TAG)))
         .perform(click())
 
     Intents.intended(IntentMatchers.hasComponent(SearchAddressActivity::class.java.name))
@@ -124,7 +123,7 @@ class PickupActivityRobot(val activityRule: ActivityTestRule<PickupActivity>) {
     Intents.intending(IntentMatchers.hasComponent(SearchAddressActivity::class.java.name))
         .respondWith(IntentMock.mockSearchAddressActivityResult(pinPoint))
 
-    onView(withTagValue(Is.`is`(AddressView.DROPOFF_ADDRESS_INPUT_TAG)))
+    onView(withTagValue(`is`(AddressView.DROPOFF_ADDRESS_INPUT_TAG)))
         .perform(click())
 
     Intents.intended(IntentMatchers.hasComponent(SearchAddressActivity::class.java.name))

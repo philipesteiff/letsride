@@ -1,22 +1,16 @@
 package com.transportation.letsride.data
 
-import com.transportation.letsride.EspressoDaggerMockRule
 import com.transportation.letsride.common.extensions.toLatLng
-import com.transportation.letsride.data.model.Estimate
 import com.transportation.letsride.data.repository.AddressRepository
 import com.transportation.letsride.data.repository.JourneyRepository
 import com.transportation.letsride.data.repository.LocationRepository
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.junit.Rule
 import org.mockito.Mock
 import org.mockito.Mockito
 
-class RepositoryMocks {
-
-  @Rule @JvmField
-  val rule = EspressoDaggerMockRule().run { initMocks(this@RepositoryMocks) }
+open class RepositoryMocks {
 
   @Mock
   lateinit var locationRepository: LocationRepository

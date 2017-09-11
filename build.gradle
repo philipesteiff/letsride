@@ -41,7 +41,8 @@ buildscript {
       'support_test'                  : '0.5',
       'mockito'                       : '2.10.0',
       'junit'                         : '4.12',
-      'hamcrest'                      : '1.3'
+      'hamcrest'                      : '1.3',
+      'test_orchestrator'             : '1.0.1'
   ]
 
   repositories {

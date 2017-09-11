@@ -16,6 +16,9 @@ android {
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true
   }
+  testOptions {
+    execution 'ANDROID_TEST_ORCHESTRATOR' // ☆*:. o(≧▽≦)o .:*☆ No shared state, isolated crashes.
+  }
   buildTypes {
     debug {
       buildConfigField "String", "API_HOST", "\"https://test.cabify.com/api/\""
@@ -31,6 +34,8 @@ android {
     main.java.srcDirs += 'src/main/kotlin'
     test.java.srcDirs += 'src/test/kotlin'
     androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    androidTest.java.srcDirs += "src/test-common/kotlin"
+    test.java.srcDirs += "src/test-common/kotlin"
   }
 }
 
@@ -85,6 +90,11 @@ dependencies {
   testImplementation "org.mockito:mockito-core:$versions.mockito"
   testImplementation "org.hamcrest:hamcrest-core:$versions.hamcrest"
   testImplementation "org.hamcrest:hamcrest-library:$versions.hamcrest"
+  testImplementation("android.arch.core:core-testing:$versions.arch_components", {
+    exclude group: 'com.android.support', module: 'support-compat'
+    exclude group: 'com.android.support', module: 'support-annotations'
+    exclude group: 'com.android.support', module: 'support-core-utils'
+  })
 
   kaptAndroidTest "com.google.dagger:dagger-compiler:$versions.dagger"
   kaptAndroidTest "com.google.dagger:dagger-android-processor:$versions.dagger"
@@ -97,4 +107,5 @@ dependencies {
   androidTestImplementation "com.squareup.okhttp3:mockwebserver:$versions.mock_webserver"
   androidTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leak_canary"
   androidTestImplementation "com.github.fabioCollini:DaggerMock:$versions.dagger_mock"
+  androidTestUtil "com.android.support.test:orchestrator:$versions.test_orchestrator"
 }
