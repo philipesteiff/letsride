@@ -10,7 +10,7 @@ import retrofit2.http.POST
 interface JourneyApi {
 
   @POST("v2/estimate")
-  fun estimate(@Body journeyEstimate: JourneyEstimate): Single<Response<List<Estimate>>>
+  fun estimate(@Body journeyEstimate: JourneyEstimate): Single<List<Estimate>>
 
 }
 
