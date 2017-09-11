@@ -3,7 +3,7 @@ package com.transportation.letsride.data.network.interceptor
 import android.os.Build
 import okhttp3.Interceptor
 import okhttp3.Response
-import java.util.Locale
+import java.util.*
 
 class HeaderInterceptor(
     private val authHeaders: AuthHeaders,

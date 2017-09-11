@@ -5,8 +5,10 @@ apply plugin: 'kotlin-kapt'
 apply plugin: "kotlin-allopen"
 
 android {
+
   compileSdkVersion 26
   buildToolsVersion "26.0.1"
+
   defaultConfig {
     applicationId "com.transportation.letsride"
     minSdkVersion 16
@@ -15,21 +17,27 @@ android {
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true
+    buildConfigField "String", "API_GOOGLE_MAPS", "\"https://maps.googleapis.com/\""
   }
+
   testOptions {
     execution 'ANDROID_TEST_ORCHESTRATOR' // ☆*:. o(≧▽≦)o .:*☆ No shared state, isolated crashes.
   }
+
   buildTypes {
+
     debug {
       buildConfigField "String", "API_HOST", "\"https://test.cabify.com/api/\""
-      buildConfigField "String", "API_GOOGLE_MAPS", "\"https://maps.googleapis.com/\""
     }
+
     release {
       buildConfigField "String", "API_HOST", "\"https://test.cabify.com/api/\"" // production host
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
+
   }
+
   sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
     test.java.srcDirs += 'src/test/kotlin'
@@ -37,6 +45,7 @@ android {
     androidTest.java.srcDirs += "src/test-common/kotlin"
     test.java.srcDirs += "src/test-common/kotlin"
   }
+
 }
 
 kapt {

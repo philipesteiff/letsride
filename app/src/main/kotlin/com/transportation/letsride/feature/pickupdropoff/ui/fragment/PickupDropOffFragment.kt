@@ -18,8 +18,7 @@ import com.transportation.letsride.feature.pickup.viewmodel.PickupViewModel
 import com.transportation.letsride.feature.pickupdropoff.viewmodel.PickupDropOffViewModel
 import com.transportation.letsride.feature.pickupdropoff.viewmodel.PickupDropOffViewModelState
 import com.transportation.letsride.feature.search.ui.activity.SearchAddressActivity
-import kotlinx.android.synthetic.main.fragment_pickup_dropoff.addressDropOffView
-import kotlinx.android.synthetic.main.fragment_pickup_dropoff.addressPickupView
+import kotlinx.android.synthetic.main.fragment_pickup_dropoff.*
 import timber.log.Timber
 import javax.inject.Inject
 

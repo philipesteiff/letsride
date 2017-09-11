@@ -9,10 +9,7 @@ import com.transportation.letsride.R
 import com.transportation.letsride.common.ui.adapter.BaseListAdapter
 import com.transportation.letsride.common.ui.adapter.BaseViewHolder
 import com.transportation.letsride.data.model.Estimate
-import kotlinx.android.synthetic.main.row_estimate.view.imgEstimateRowIcon
-import kotlinx.android.synthetic.main.row_estimate.view.textEstimateRowEta
-import kotlinx.android.synthetic.main.row_estimate.view.textEstimateRowName
-import kotlinx.android.synthetic.main.row_estimate.view.textEstimateRowPrice
+import kotlinx.android.synthetic.main.row_estimate.view.*
 
 class EstimatesAdapter(val context: Context) : BaseListAdapter<Estimate>() {
 

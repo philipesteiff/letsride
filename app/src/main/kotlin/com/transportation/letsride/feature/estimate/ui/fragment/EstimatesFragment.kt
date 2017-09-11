@@ -14,7 +14,7 @@ import com.transportation.letsride.data.model.Estimate
 import com.transportation.letsride.feature.estimate.ui.adapter.EstimatesAdapter
 import com.transportation.letsride.feature.estimate.viewmodel.EstimatesViewModel
 import com.transportation.letsride.feature.pickupdropoff.viewmodel.FilledAddresses
-import kotlinx.android.synthetic.main.fragment_estimates.recyclerEstimates
+import kotlinx.android.synthetic.main.fragment_estimates.*
 
 class EstimatesFragment : BaseFragment() {
 

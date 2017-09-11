@@ -9,7 +9,7 @@ import com.transportation.letsride.data.executor.ApplicationSchedulers
 import com.transportation.letsride.data.executor.SchedulerProvider
 import dagger.Module
 import dagger.Provides
-import java.util.Locale
+import java.util.*
 import javax.inject.Singleton
 
 @Module

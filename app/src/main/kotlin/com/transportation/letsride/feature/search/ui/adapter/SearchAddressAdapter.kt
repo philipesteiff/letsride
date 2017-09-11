@@ -7,8 +7,7 @@ import com.transportation.letsride.R
 import com.transportation.letsride.common.ui.adapter.BaseListAdapter
 import com.transportation.letsride.common.ui.adapter.BaseViewHolder
 import com.transportation.letsride.data.model.AutoCompleteSuggestion
-import kotlinx.android.synthetic.main.row_suggestion_address.view.textPlaceRowDescription
-import kotlinx.android.synthetic.main.row_suggestion_address.view.textPlaceRowName
+import kotlinx.android.synthetic.main.row_suggestion_address.view.*
 
 class SearchAddressAdapter(
     var onClick: (AutoCompleteSuggestion) -> Unit = {}
