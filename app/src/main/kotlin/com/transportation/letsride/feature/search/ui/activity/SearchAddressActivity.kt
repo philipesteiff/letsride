@@ -6,8 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import com.transportation.letsride.R
 import com.transportation.letsride.common.ui.activity.BaseActivity
-import com.transportation.letsride.common.util.observe
-import com.transportation.letsride.common.util.plusAssign
+import com.transportation.letsride.common.extensions.observe
+import com.transportation.letsride.common.extensions.plusAssign
 import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.data.model.PinPoint
 import com.transportation.letsride.feature.search.ui.adapter.SearchAddressAdapter

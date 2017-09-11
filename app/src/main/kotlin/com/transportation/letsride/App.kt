@@ -10,7 +10,7 @@ import dagger.android.DispatchingAndroidInjector
 import timber.log.Timber
 import javax.inject.Inject
 
-open class App : Application(),
+class App : Application(),
     AppInjector,
     ActivityInjector,
     Logger,

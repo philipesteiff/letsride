@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.os.Bundle
 import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
-import com.transportation.letsride.common.util.plusAssign
+import com.transportation.letsride.common.extensions.plusAssign
 import com.transportation.letsride.common.viewmodel.BaseViewModel
 import com.transportation.letsride.data.executor.SchedulerProvider
 import com.transportation.letsride.data.model.PinPoint

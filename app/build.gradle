@@ -17,6 +17,7 @@ android {
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true
+
     buildConfigField "String", "API_GOOGLE_MAPS", "\"https://maps.googleapis.com/\""
     buildConfigField "Boolean", "ENABLE_DEBUG_MONITORS", "false" /* Enable this to turn on: StrictMode and LeakCanary */
   }
@@ -64,7 +65,6 @@ dependencies {
   implementation "com.android.support.constraint:constraint-layout:$versions.constraint_layout"
   implementation "android.arch.lifecycle:runtime:$versions.arch_components"
   implementation "android.arch.lifecycle:extensions:$versions.arch_components"
-  implementation "android.arch.lifecycle:reactivestreams:$versions.arch_components"
   kapt "android.arch.lifecycle:compiler:$versions.arch_components"
   compileOnly "com.google.dagger:dagger:$versions.dagger"
   implementation "com.google.dagger:dagger-android:$versions.dagger"

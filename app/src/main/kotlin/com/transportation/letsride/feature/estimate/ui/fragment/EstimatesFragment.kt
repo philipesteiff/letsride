@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.transportation.letsride.R
 import com.transportation.letsride.common.ui.fragment.BaseFragment
-import com.transportation.letsride.common.util.observe
+import com.transportation.letsride.common.extensions.observe
 import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.data.model.Estimate
 import com.transportation.letsride.feature.estimate.ui.adapter.EstimatesAdapter

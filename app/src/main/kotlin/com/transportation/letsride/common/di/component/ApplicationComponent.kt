@@ -9,7 +9,6 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import javax.inject.Singleton
 
-
 @Singleton
 @Component(
     modules = arrayOf(
@@ -24,7 +23,7 @@ interface ApplicationComponent {
   @Component.Builder
   interface Builder {
 
-    fun appModule(appModule: AppModule):Builder
+    fun appModule(appModule: AppModule): Builder
 
     @BindsInstance
     fun application(app: App): Builder

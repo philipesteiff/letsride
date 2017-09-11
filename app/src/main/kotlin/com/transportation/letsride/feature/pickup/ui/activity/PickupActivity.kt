@@ -11,7 +11,7 @@ import com.transportation.letsride.common.di.FragmentInjector
 import com.transportation.letsride.common.extensions.attachFragment
 import com.transportation.letsride.common.extensions.commitTransactions
 import com.transportation.letsride.common.extensions.findFragment
-import com.transportation.letsride.common.util.observe
+import com.transportation.letsride.common.extensions.observe
 import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.feature.estimate.ui.fragment.EstimatesFragment
 import com.transportation.letsride.feature.map.ui.fragment.CustomMapFragment

@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.transportation.letsride.R
-import com.transportation.letsride.common.util.plusAssign
+import com.transportation.letsride.common.extensions.plusAssign
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

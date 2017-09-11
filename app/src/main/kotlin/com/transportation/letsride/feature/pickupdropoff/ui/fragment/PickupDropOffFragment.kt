@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import com.transportation.letsride.R
 import com.transportation.letsride.common.navigation.Navigator
 import com.transportation.letsride.common.ui.fragment.BaseFragment
-import com.transportation.letsride.common.util.observe
+import com.transportation.letsride.common.extensions.observe
 import com.transportation.letsride.common.util.unsafeLazy
 import com.transportation.letsride.data.model.PinPoint
 import com.transportation.letsride.feature.pickup.viewmodel.MapViewModel
