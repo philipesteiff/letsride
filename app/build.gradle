@@ -18,6 +18,7 @@ android {
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true
     buildConfigField "String", "API_GOOGLE_MAPS", "\"https://maps.googleapis.com/\""
+    buildConfigField "Boolean", "ENABLE_DEBUG_MONITORS", "false" /* Enable this to turn on: StrictMode and LeakCanary */
   }
 
   testOptions {

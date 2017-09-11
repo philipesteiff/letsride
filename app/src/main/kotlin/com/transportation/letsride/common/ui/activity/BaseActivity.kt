@@ -18,7 +18,8 @@ abstract class BaseActivity : AppCompatActivity(), LifecycleRegistryOwner {
   private val lifecycleRegistry = LifecycleRegistry(this)
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    enableStrictMode()
+    if (BuildConfig.ENABLE_DEBUG_MONITORS)
+      enableStrictMode()
     super.onCreate(savedInstanceState)
     window.setBackgroundDrawable(null)
   }

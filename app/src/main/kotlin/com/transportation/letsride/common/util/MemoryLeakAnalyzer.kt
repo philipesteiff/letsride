@@ -8,10 +8,13 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
+import com.transportation.letsride.BuildConfig
 
 interface MemoryLeakAnalyzer {
 
   fun initAnalyzerProcess(application: Application) {
+    if (!BuildConfig.ENABLE_DEBUG_MONITORS) return
+
     if (LeakCanary.isInAnalyzerProcess(application)) {
       // This process is dedicated to LeakCanary for heap analysis.
       // You should not init your app in this process.
