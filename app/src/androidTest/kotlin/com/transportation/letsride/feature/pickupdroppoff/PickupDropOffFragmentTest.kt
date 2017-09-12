@@ -2,6 +2,7 @@ package com.transportation.letsride.feature.pickupdroppoff
 
 import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
+import android.support.test.rule.GrantPermissionRule
 import android.support.test.runner.AndroidJUnit4
 import com.transportation.letsride.feature.PickupActivityRobot
 import com.transportation.letsride.feature.pickup.ui.activity.PickupActivity
@@ -14,12 +15,15 @@ import org.junit.runner.RunWith
 class PickupDropOffFragmentTest {
 
   @Rule @JvmField
+  val runtimePermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
+
+  @Rule @JvmField
   val activityRule: ActivityTestRule<PickupActivity> = ActivityTestRule(PickupActivity::class.java, true, false)
 
   val robot = PickupActivityRobot(activityRule)
 
   @Test
-  fun openApp_addressesMustBeVisible() {
+  fun openApp_addressesMrustBeVisible() {
     robot.launch()
         .isAddressPickupDisplayed()
         .isAddressDropOffDisplayed()
